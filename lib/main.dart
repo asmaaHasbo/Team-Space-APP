@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:team_space/core/di/get_it.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,7 +11,7 @@ Future<void> main() async {
     url: dotenv.env['SUPABASE_URL']!,
     publishableKey: dotenv.env['SUPABASE_KEY']!,
   );
-
+  await setupGetIt();
   runApp(const MyApp());
 }
 
@@ -39,7 +40,9 @@ class _PingPageState extends State<PingPage> {
       await Supabase.instance.client.from('__ping__').select();
       setState(() => _result = 'رد بنجاح — بس ده غريب!');
     } on PostgrestException catch (e) {
-      setState(() => _result = 'PostgrestException\ncode: ${e.code}\n${e.message}');
+      setState(
+        () => _result = 'PostgrestException\ncode: ${e.code}\n${e.message}',
+      );
     } catch (e) {
       setState(() => _result = '${e.runtimeType}\n$e');
     }
