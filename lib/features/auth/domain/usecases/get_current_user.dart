@@ -10,3 +10,4 @@ class GetCurrentUser {
     return repository.getCurrentUser();
   }
 }
+
