@@ -1,4 +1,4 @@
-package com.example.team_space
+package com.asmaahasbo.team_space
 
 import io.flutter.embedding.android.FlutterActivity
 
