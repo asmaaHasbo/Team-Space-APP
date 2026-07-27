@@ -6,7 +6,8 @@ class Register {
 
   Register(this.repository);
 
-  Future<AppUser> call({
+  
+  Future<void> call({
     required String fullName,
     required String phone,
     required String email,

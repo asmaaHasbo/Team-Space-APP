@@ -6,7 +6,7 @@ class GetCurrentUser {
 
   GetCurrentUser(this.repository);
 
-  AppUser? call() {
+  Future<AppUser?> call() {
     return repository.getCurrentUser();
   }
 }
