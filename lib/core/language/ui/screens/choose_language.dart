@@ -2,17 +2,17 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wafed/core/helper/app_locale_notifier.dart';
-import 'package:wafed/core/themes/app_text_styles.dart';
-import 'package:wafed/feature/language/logic/cubit/lang_cubit.dart';
+import 'package:team_space/core/helper/app_locale_notifier.dart';
+import 'package:team_space/core/language/logic/cubit/lang_cubit.dart';
+import 'package:team_space/core/themes/app_text_styles.dart';
+
 import '../../logic/cubit/lang_state.dart';
 import '../widgets/language_option_item.dart';
 
 const _languages = [
   {'code': 'en', 'name': 'English'},
   {'code': 'ar', 'name': 'Arabic'},
-  // {'code': 'es', 'name': 'Spanish'},
-  {'code': 'fr', 'name': 'french'},
+  
 ];
 
 class ChooseLanguage extends StatelessWidget {

@@ -1,8 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wafed/core/themes/app_colors.dart';
-import 'package:wafed/core/themes/app_text_styles.dart';
+import 'package:team_space/core/themes/app_colors.dart';
+import 'package:team_space/core/themes/app_text_styles.dart';
+
 
 class LanguageOptionItem extends StatelessWidget {
   final String langCode;
@@ -35,7 +36,7 @@ class LanguageOptionItem extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: isSelected
-                      ? AppColors.mainColor
+                      ? AppColors.primary
                       : Colors.grey.shade400,
                   width: 2,
                 ),
@@ -47,7 +48,7 @@ class LanguageOptionItem extends StatelessWidget {
                         height: 12.h,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          color: AppColors.mainColor,
+                          color: AppColors.primary,
                         ),
                       ),
                     )
