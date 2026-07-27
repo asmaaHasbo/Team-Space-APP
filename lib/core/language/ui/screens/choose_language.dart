@@ -1,71 +1,45 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:team_space/core/helper/app_locale_notifier.dart';
-import 'package:team_space/core/language/logic/cubit/lang_cubit.dart';
+import 'package:team_space/core/language/app_locales.dart';
+import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/core/themes/app_text_styles.dart';
-
-import '../../logic/cubit/lang_state.dart';
 import '../widgets/language_option_item.dart';
 
-const _languages = [
-  {'code': 'en', 'name': 'English'},
-  {'code': 'ar', 'name': 'Arabic'},
-  
-];
+const _nativeNames = {'en': 'English', 'ar': 'العربية'};
 
-class ChooseLanguage extends StatelessWidget {
-  const ChooseLanguage({super.key});
+Future<void> showLanguageDialog(BuildContext context) {
+  final currentCode = context.locale.languageCode;
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => LanguageCubit(), // ✅ بدون SharedPreferences هنا
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text('Language'.tr(), style: AppTextStyles.font20SemiBold),
-          centerTitle: false,
-          elevation: 0,
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
+  return showDialog(
+    context: context,
+    builder: (dialogContext) {
+      return AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
         ),
-
-        body: BlocConsumer<LanguageCubit, LanguageState>(
-          listener: (context, state) {
-            WidgetsBinding.instance.addPostFrameCallback((_) async {
-              if (!context.mounted) return;
-              // Apply the locale to easy_localization first (loads the new
-              // translations), then notify the app-wide locale notifier so all
-              // routes rebuild with those new strings.
-              await context.setLocale(Locale(state.selectedLang));
-              if (context.mounted) {
-                appLocaleNotifier.value = Locale(state.selectedLang);
-              }
-            });
-          },
-
-          builder: (context, state) {
-            final cubit = context.read<LanguageCubit>();
-            return ListView.separated(
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-              itemCount: _languages.length,
-              separatorBuilder: (_, _) =>
-                  Divider(color: Colors.grey.shade200, height: 1.h),
-              itemBuilder: (_, i) {
-                final lang = _languages[i];
-                return LanguageOptionItem(
-                  langCode: lang['code']!,
-                  langName: lang['name']!,
-                  isSelected: state.selectedLang == lang['code'],
-                  onTap: () => cubit.changeLanguage(lang['code']!),
-                );
-              },
-            );
-          },
+        title: Text('language'.tr(), style: AppTextStyles.font18SemiBold),
+        contentPadding: EdgeInsets.symmetric(vertical: 8.h),
+        content: Column(
+          mainAxisSize: MainAxisSize.min, // مهم: عشان الـ dialog ياخد طول المحتوى بس
+          children: [
+            for (final locale in AppLocales.supported)
+              LanguageOptionItem(
+                langCode: locale.languageCode,
+                langName: _nativeNames[locale.languageCode] ??
+                    locale.languageCode,
+                isSelected: currentCode == locale.languageCode,
+                onTap: () {
+                  Navigator.of(dialogContext).pop();
+                  if (locale.languageCode != currentCode) {
+                    context.setLocale(locale);
+                  }
+                },
+              ),
+          ],
         ),
-      ),
-    );
-  }
+      );
+    },
+  );
 }
