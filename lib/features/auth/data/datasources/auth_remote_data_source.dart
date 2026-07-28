@@ -6,7 +6,7 @@ import '../../../../core/error/handle_errors.dart';
 import '../models/user_model.dart';
 
 abstract interface class AuthRemoteDataSource {
-  Future<UserModel> register({
+  Future<void> register({
     required String fullName,
     required String phone,
     required String email,
@@ -30,42 +30,37 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl(this._client);
 
   @override
-  Future<UserModel> register({
-    required String fullName,
-    required String phone,
-    required String email,
-    required String password,
-  }) async {
-    try {
-      final res = await _client.auth.signUp(
-        email: email,
-        password: password,
-        data: {'full_name': fullName, 'phone': phone},
-        // مالوش لازمة دلوقتي وconfirm-email مقفول، بس سايبينه عشان لو
-        // اترجع تاني يشتغل من غير ما حد يفتكر السطر ده.
-        emailRedirectTo: AppDeepLinks.emailConfirmation,
-      );
-
-      final user = res.user;
-      if (user == null) {
-        throw const ServerException('Sign up returned no user');
-      }
-
-      // من غير confirm-email الـ signUp بيرجّع session كاملة، فالمستخدم
-      // بيبقى داخل على طول — بنقرا بياناته زي ما بنعمل في الـ login.
-      if (res.session == null) {
-        throw const AuthFailureException(
-          'Confirm email is still enabled in Supabase — turn it off from '
-          'Authentication → Providers → Email',
-        );
-      }
-
-      return _buildFromProfile(user);
-    } catch (e) {
-      return handleError(e);
-    }
+ @override
+Future<void> register({
+  required String fullName,
+  required String phone,
+  required String email,
+  required String password,
+}) async {
+  final AuthResponse res;
+  try {
+    res = await _client.auth.signUp(
+      email: email,
+      password: password,
+      data: {'full_name': fullName, 'phone': phone},
+      emailRedirectTo: AppDeepLinks.emailConfirmation,
+    );
+  } catch (e) {
+     handleError(e);
   }
 
+  final user = res.user;
+
+  // Supabase quirk (confirm-email ON): إيميل متسجّل ومؤكّد قبل كده بيرجّع
+  // user بـ identities فاضية، من غير error ومن غير ما يبعت إيميل. بنمسكها
+  // بره الـ try عشان handleError ميعملهاش re-wrap لـ ServerException.
+  if (user == null || (user.identities?.isEmpty ?? true)) {
+    throw const AuthFailureException('This email is already registered');
+  }
+
+  // session == null هنا حالة متوقعة — المستخدم لازم يأكّد من لينك الإيميل.
+  // مفيش _buildFromProfile: مفيش session، وقراءة profiles محتاجة authenticated.
+}
   @override
   Future<UserModel> login({
     required String email,
