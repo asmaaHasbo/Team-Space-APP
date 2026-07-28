@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:team_space/core/themes/app_radius.dart';
 class FieldContainer extends StatelessWidget {
   final Widget child;
 
@@ -10,12 +9,13 @@ class FieldContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(AppRadius.base),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x1A000000),
+            color: Color(0x0D000000),
             spreadRadius: 0,
-            blurRadius: 15,
+            blurRadius: 8,
+            offset: Offset(0, 2),
           ),
         ],
       ),

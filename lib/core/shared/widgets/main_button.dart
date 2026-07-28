@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_space/core/themes/app_colors.dart';
+import 'package:team_space/core/themes/app_radius.dart';
 import 'package:team_space/core/themes/app_text_styles.dart';
 
 class MainButton extends StatelessWidget {
@@ -23,7 +24,7 @@ class MainButton extends StatelessWidget {
     this.height = 61,
     this.color,
     this.textColor,
-    this.borderRadius = 16,
+    this.borderRadius = AppRadius.base,
     this.textSize,
   });
 

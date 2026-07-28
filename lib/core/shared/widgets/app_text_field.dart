@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_space/core/shared/widgets/field_container_for_shad.dart';
 import 'package:team_space/core/shared/widgets/field_label.dart';
-import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/core/themes/app_text_styles.dart';
 
 class AppTextField extends StatelessWidget {
@@ -75,25 +74,16 @@ class AppTextField extends StatelessWidget {
     );
   }
 
+  // الشكل (border / fill / padding / hintStyle) جاي من
+  // `AppTheme.light.inputDecorationTheme` — هنا بنمرّر المحتوى بس.
   InputDecoration _buildDecoration() {
     return InputDecoration(
       hintText: hintText,
-      hintStyle: AppTextStyles.font15Regular.copyWith(
-        color: AppColors.textHint,
-      ),
       suffixIcon: suffixIcon,
       prefixIcon: prefixIcon,
-      fillColor: fillColor ?? Colors.white,
-      filled: true,
-      contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.w),
-      border: _border(),
-      enabledBorder: _border(),
-      focusedBorder: _border(),
+      fillColor: fillColor,
+      // الـ maxLength متطبّق بالـ inputFormatters، فالعدّاد تحت الحقل مالوش لزمة
+      counterText: '',
     );
   }
-
-  OutlineInputBorder _border() => OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20.r),
-        borderSide: const BorderSide(color: Color(0xffDDDDDD), width: 1),
-      );
 }

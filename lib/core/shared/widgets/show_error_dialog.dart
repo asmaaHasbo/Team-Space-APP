@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:team_space/core/themes/app_radius.dart';
 
 /// عرض Dialog للأخطاء (أفضل للرسائل الطويلة)
 void showErrorDialog(BuildContext context, String errorMessage) {
@@ -6,7 +7,7 @@ void showErrorDialog(BuildContext context, String errorMessage) {
     context: context,
     builder: (context) => AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.large),
       ),
       title: Row(
         children: [

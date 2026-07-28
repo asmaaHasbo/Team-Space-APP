@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
+import 'app_radius.dart';
 import 'app_text_styles.dart';
 
 class AppTheme {
@@ -36,17 +37,22 @@ class AppTheme {
             disabledBackgroundColor: AppColors.primaryLight,
             textStyle: AppTextStyles.font16Bold,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadius.base),
             ),
             minimumSize: const Size.fromHeight(52),
           ),
         ),
 
+        // المصدر الوحيد لشكل كل حقول الإدخال — الـ widgets بتاعتنا
+        // (AppTextField / AppPhoneField) بتعتمد عليه ومبتعيدش تعريف الشكل.
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
-          fillColor: AppColors.surface,
+          fillColor: AppColors.fieldFill,
           hintStyle: AppTextStyles.font15Regular.copyWith(
             color: AppColors.textHint,
+          ),
+          errorStyle: AppTextStyles.font12Regular.copyWith(
+            color: AppColors.error,
           ),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
@@ -54,6 +60,7 @@ class AppTheme {
           ),
           border: _border(AppColors.border),
           enabledBorder: _border(AppColors.border),
+          disabledBorder: _border(AppColors.divider),
           focusedBorder: _border(AppColors.primary),
           errorBorder: _border(AppColors.error),
           focusedErrorBorder: _border(AppColors.error),
@@ -73,7 +80,7 @@ class AppTheme {
       );
 
   static OutlineInputBorder _border(Color color) => OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.base),
         borderSide: BorderSide(color: color, width: 1),
       );
 }

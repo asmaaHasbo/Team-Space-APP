@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_space/core/themes/app_radius.dart';
 
 class CustomElevatedBtn extends StatelessWidget {
   final double? width;
@@ -31,7 +32,7 @@ class CustomElevatedBtn extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(raduis ?? 10).r,
+            borderRadius: BorderRadius.circular(raduis ?? AppRadius.base).r,
           ),
         ),
         onPressed: onPressed,

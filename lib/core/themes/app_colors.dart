@@ -22,6 +22,8 @@ class AppColors {
   static const Color border = Color(0xFFE2E6EC);
   static const Color divider = Color(0xFFEDEFF3);
 
+  static const Color fieldFill = Color(0xFFF7F9FC);
+
   // Status
   static const Color success = Color(0xFF2E9E5B);
   static const Color error = Color(0xFFD64545);

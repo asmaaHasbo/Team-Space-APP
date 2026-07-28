@@ -1,22 +1,6 @@
 
 
-String? validatePassportNumber(String? value) {
-  if (value == null || value.trim().isEmpty) {
-    return 'signup.validation.required';
-  }
-  if (value.trim().length < 6) return 'signup.validation.passportMin6';
-  return null;
-}
 
-String? validateNationalNumber(String? value) {
-  if (value == null || value.trim().isEmpty) {
-    return 'signup.validation.required';
-  }
-  if (!RegExp(r'^\d{12}$').hasMatch(value.trim())) {
-    return 'signup.validation.nationalNumber12';
-  }
-  return null;
-}
 
 String? validateSignupPassword(String? value) {
   if (value == null || value.trim().isEmpty) {
@@ -50,33 +34,32 @@ String? validateRequired(String? value) {
 
 String? validateEmail(String? value) {
   if (value == null || value.trim().isEmpty) {
-    return 'Email is required';
+    return 'Please enter your email';
   }
 
-  // Regex pattern for email validation as per requirements
   final emailRegex = RegExp(r'^\S+@\S+\.\S+$');
   if (!emailRegex.hasMatch(value.trim())) {
-    return 'Please enter a valid email';
+    return 'enter_valid_email';
   }
 
   return null; // Valid
 }
 
-/// Validates password format and length
-
+/// Validates password format and length.
+/// بترجّع **مفتاح ترجمة** زي `validateEmail`.
 String? validatePassword(String? value) {
   if (value == null || value.trim().isEmpty) {
-    return 'Password is required';
+    return 'Please enter your password';
   }
 
   final trimmedValue = value.trim();
 
   if (trimmedValue.length < 6) {
-    return 'Password must be at least 6 characters';
+    return 'passwordMin6';
   }
 
   if (trimmedValue.length > 128) {
-    return 'Password must not exceed 128 characters';
+    return 'passwordMax128';
   }
 
   return null; // Valid

@@ -9,8 +9,6 @@ import 'package:intl_phone_field/phone_number.dart';
 import 'package:team_space/core/helper/phone_validator.dart';
 import 'package:team_space/core/shared/widgets/field_container_for_shad.dart';
 import 'package:team_space/core/shared/widgets/field_label.dart';
-import 'package:team_space/core/themes/app_colors.dart';
-import 'package:team_space/core/themes/app_text_styles.dart';
 
 class AppPhoneField extends StatelessWidget {
   final String hintText;
@@ -21,7 +19,6 @@ class AppPhoneField extends StatelessWidget {
   final ValueChanged<PhoneNumber>? onChanged;
   final Color? fillColor;
 
-  /// Restrict the country picker to these ISO codes (e.g. `['LY']`). When set to
   /// a single country, no other flags are shown.
   final List<String>? allowedCountryCodes;
 
@@ -88,28 +85,16 @@ class AppPhoneField extends StatelessWidget {
     );
   }
 
-  // دايمًا بيسلّم آخر قيمة للأب — التحقق مكانه الـ validator وقت الـ submit؛
-  // البوابة القديمة (if isValid) كانت بتخبّي الرقم عن الـ cubit فيتبعت فاضي.
-  void _handleChange(PhoneNumber phone) {
+ void _handleChange(PhoneNumber phone) {
     onChanged?.call(phone);
   }
 
+  // زي AppTextField — الشكل جاي من الـ inputDecorationTheme
   InputDecoration _buildDecoration() {
-    final border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20.r),
-      borderSide: const BorderSide(color: Color(0xffDDDDDD), width: 1),
-    );
     return InputDecoration(
       hintText: hintText,
-      hintStyle: AppTextStyles.font15Regular.copyWith(
-        color: AppColors.textHint,
-      ),
-      fillColor: fillColor ?? Colors.white,
-      filled: true,
-      contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
-      border: border,
-      enabledBorder: border,
-      focusedBorder: border,
+      fillColor: fillColor,
+      counterText: '',
     );
   }
 }
