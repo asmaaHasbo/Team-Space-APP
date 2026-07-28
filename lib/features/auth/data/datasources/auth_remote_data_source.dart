@@ -5,7 +5,7 @@ import '../../../../core/error/handle_errors.dart';
 import '../models/user_model.dart';
 
 abstract interface class AuthRemoteDataSource {
-  Future<UserModel> register({
+  Future<void> register({
     required String fullName,
     required String phone,
     required String email,
@@ -25,7 +25,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl(this._client);
 
   @override
-  Future<UserModel> register({
+  Future<void> register({
     required String fullName,
     required String phone,
     required String email,
@@ -38,13 +38,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         data: {'full_name': fullName, 'phone': phone},
       );
 
-      final user = res.user;
-      if (user == null) {
+      // مع confirm-email الـ signUp بيرجّع user من غير session، فمبنحاولش
+      // نقرا صف الـ profiles هنا — الـ trigger بتاع handle_new_user
+      // بيعمله في الداتابيز عادي، وبنقراه أول ما المستخدم يسجّل دخول.
+      if (res.user == null) {
         throw const ServerException('Sign up returned no user');
       }
-      return _buildFromProfile(user);
     } catch (e) {
-      return handleError(e);
+      handleError(e);
     }
   }
 

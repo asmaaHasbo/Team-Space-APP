@@ -19,6 +19,14 @@ String normalizeNationalNumber(String number) {
 bool isValidEgyptianMobile(String number) =>
     _egyptianMobile.hasMatch(normalizeNationalNumber(number));
 
+/// الصيغة اللي الداتابيز مستنياها (CHECK بـ `^01[0-9]{9}$`).
+/// بتتنادى قبل الإرسال بس — عشان `1012345678` و `01012345678`
+/// الاتنين يتخزنوا بنفس الشكل مهما المستخدم كتب إيه.
+String toStoredEgyptianPhone(String number) {
+  final national = normalizeNationalNumber(number);
+  return national.isEmpty ? '' : '0$national';
+}
+
 /// التحقق حسب الدولة المختارة في الـ picker — مصر ليها قاعدة خاصة،
 /// وأي دولة تانية بتتحقق بالطول/البادئة من الحزمة.
 bool validatePhoneNumberForCountry(String number, PhoneNumber phone) {

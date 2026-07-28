@@ -23,6 +23,8 @@ class AppTextField extends StatelessWidget {
   final Color? fillColor;
   final List<TextInputFormatter>? inputFormatters;
 
+  final EdgeInsetsGeometry? contentPadding;
+
   const AppTextField({
     super.key,
     required this.hintText,
@@ -41,6 +43,7 @@ class AppTextField extends StatelessWidget {
     this.onChanged,
     this.fillColor,
     this.inputFormatters,
+    this.contentPadding,
   });
 
   @override
@@ -82,6 +85,7 @@ class AppTextField extends StatelessWidget {
       suffixIcon: suffixIcon,
       prefixIcon: prefixIcon,
       fillColor: fillColor,
+      contentPadding: contentPadding,
       // الـ maxLength متطبّق بالـ inputFormatters، فالعدّاد تحت الحقل مالوش لزمة
       counterText: '',
     );

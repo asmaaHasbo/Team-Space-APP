@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_space/core/shared/widgets/language_toggle_button.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/features/auth/presentation/ui/widgets/login_footer.dart';
 import 'package:team_space/features/auth/presentation/ui/widgets/login_form.dart';
 import 'package:team_space/features/auth/presentation/ui/widgets/login_header.dart';
-import 'package:team_space/features/auth/presentation/ui/widgets/login_language_button.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -19,7 +19,10 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const LoginLanguageButton(),
+              const Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: LanguageToggleButton(),
+              ),
               SizedBox(height: 32.h),
               const LoginHeader(),
               SizedBox(height: 36.h),
