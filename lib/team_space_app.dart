@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_space/core/di/get_it.dart';
+import 'package:team_space/core/routing/app_navigator.dart';
 import 'package:team_space/core/routing/app_router.dart';
 import 'package:team_space/core/routing/app_routes.dart';
 import 'package:team_space/core/themes/app_theme.dart';
@@ -21,23 +22,41 @@ class TeamSpaceApp extends StatelessWidget {
     // تشوفه كل الشاشات — لو اتحط جوّه route كان هيتولد من أول وجديد.
     return BlocProvider<AuthCubit>(
       create: (_) => getIt<AuthCubit>(),
-      child: ScreenUtilInit(
-        designSize: const Size(375, 812),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (_, _) {
-          return MaterialApp(
-            title: 'Team Space',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.light,
-            locale: locale,
-            supportedLocales: context.supportedLocales,
-            localizationsDelegates: context.localizationDelegates,
-            initialRoute: AppRoutes.authGate,
-            onGenerateRoute: AppRouter.onGenerateRoute,
-          );
-        },
+      // كل تنقّل سببه تغيّر الجلسة بيتم من هنا وبس — سواء دخول من الشاشة،
+      // أو من لينك الإيميل، أو خروج. الشاشات نفسها مبقتش تعرف حاجة عن ده.
+      child: BlocListener<AuthCubit, AuthState>(
+        listener: _onAuthChanged,
+        child: ScreenUtilInit(
+          designSize: const Size(375, 812),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (_, _) {
+            return MaterialApp(
+              title: 'Team Space',
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.light,
+              locale: locale,
+              navigatorKey: AppNavigator.key,
+              supportedLocales: context.supportedLocales,
+              localizationsDelegates: context.localizationDelegates,
+              initialRoute: AppRoutes.authGate,
+              onGenerateRoute: AppRouter.onGenerateRoute,
+            );
+          },
+        ),
       ),
     );
+  }
+
+  void _onAuthChanged(BuildContext context, AuthState state) {
+    switch (state) {
+      case Authenticated():
+        AppNavigator.replaceAllWith(AppRoutes.home);
+      case Unauthenticated():
+        AppNavigator.replaceAllWith(AppRoutes.login);
+      case AuthInitial():
+      case AuthLoading():
+        break;
+    }
   }
 }

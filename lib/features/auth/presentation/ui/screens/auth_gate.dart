@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:team_space/core/helper/extension.dart';
-import 'package:team_space/core/routing/app_routes.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/features/auth/presentation/cubit/auth/auth_cubit.dart';
 
@@ -27,29 +25,13 @@ class _AuthGateState extends State<AuthGate> {
     });
   }
 
+  // التنقّل نفسه مش هنا — الـ listener اللي فوق الـ MaterialApp هو اللي
+  // بيتصرف مع النتيجة، عشان نفس المنطق يشتغل من أي شاشة.
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: AppColors.surface,
-      body: BlocListener<AuthCubit, AuthState>(
-        listener: _onAuthChanged,
-        child: const Center(
-          child: CircularProgressIndicator(color: AppColors.primary),
-        ),
-      ),
+      body: Center(child: CircularProgressIndicator(color: AppColors.primary)),
     );
-  }
-
-  /// التنقّل side effect — فمكانه الـ listener مش الـ builder
-  void _onAuthChanged(BuildContext context, AuthState state) {
-    switch (state) {
-      case Authenticated():
-        context.pushReplacementNamed(AppRoutes.home);
-      case Unauthenticated():
-        context.pushReplacementNamed(AppRoutes.login);
-      case AuthInitial():
-      case AuthLoading():
-        break;
-    }
   }
 }

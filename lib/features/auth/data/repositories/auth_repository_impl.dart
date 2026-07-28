@@ -35,4 +35,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<AppUser?> getCurrentUser() => _remote.getCurrentUser();
+
+  @override
+  Stream<AppUser?> watchAuthState() => _remote.watchAuthState();
 }

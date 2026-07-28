@@ -16,4 +16,8 @@ abstract class AuthRepository {
   Future<void> logout();
 
   Future<AppUser?> getCurrentUser();
+
+  /// المستخدم الحالي كل ما جلسة تتفتح أو تتقفل — بيغطي الدخول اللي بيحصل
+  /// من بره التطبيق (لينك تأكيد الإيميل).
+  Stream<AppUser?> watchAuthState();
 }

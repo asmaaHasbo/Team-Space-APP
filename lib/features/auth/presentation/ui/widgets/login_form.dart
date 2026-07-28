@@ -2,9 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:team_space/core/helper/extension.dart';
 import 'package:team_space/core/helper/validators.dart';
-import 'package:team_space/core/routing/app_routes.dart';
 import 'package:team_space/core/shared/widgets/app_text_field.dart';
 import 'package:team_space/core/shared/widgets/main_button.dart';
 import 'package:team_space/core/shared/widgets/setup_snack_bar_failure_state.dart';
@@ -132,10 +130,9 @@ class _LoginFormState extends State<LoginForm> {
     switch (state) {
       case LoginSuccess(:final user):
         setupSnackBarForSuccessState(context, context.tr('Login successful'));
-        // بنسلّم المستخدم للـ AuthCubit الأول عشان الـ home تلاقي بياناته
-        // جاهزة، وبعدين نمسح الـ stack فمفيش رجوع لشاشة الدخول.
+        // بنسلّم المستخدم للـ AuthCubit وخلاص — هو اللي بيوصّل للـ home،
+        // زي ما بيعمل بالظبط لما الدخول يجي من لينك تأكيد الإيميل.
         context.read<AuthCubit>().onAuthenticated(user);
-        context.pushNamedAndRemoveUntil(AppRoutes.home);
       case LoginError(:final message):
         setupSnackbarForFailureState(
           context,

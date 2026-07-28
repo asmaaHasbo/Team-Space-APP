@@ -8,6 +8,7 @@ import '../../features/auth/domain/usecases/get_current_user.dart';
 import '../../features/auth/domain/usecases/login.dart';
 import '../../features/auth/domain/usecases/logout.dart';
 import '../../features/auth/domain/usecases/register.dart';
+import '../../features/auth/domain/usecases/watch_auth_state.dart';
 import '../../features/auth/presentation/cubit/auth/auth_cubit.dart';
 import '../../features/auth/presentation/cubit/login/login_cubit.dart';
 import '../../features/auth/presentation/cubit/register/register_cubit.dart';
@@ -32,10 +33,15 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<Register>(() => Register(getIt()));
   getIt.registerLazySingleton<Logout>(() => Logout(getIt()));
   getIt.registerLazySingleton<GetCurrentUser>(() => GetCurrentUser(getIt()));
+  getIt.registerLazySingleton<WatchAuthState>(() => WatchAuthState(getIt()));
 
   // cubits
   getIt.registerLazySingleton<AuthCubit>(
-    () => AuthCubit(getCurrentUser: getIt(), logout: getIt()),
+    () => AuthCubit(
+      getCurrentUser: getIt(),
+      logout: getIt(),
+      watchAuthState: getIt(),
+    ),
   );
   getIt.registerFactory<LoginCubit>(() => LoginCubit(login: getIt()));
   getIt.registerFactory<RegisterCubit>(() => RegisterCubit(register: getIt()));
