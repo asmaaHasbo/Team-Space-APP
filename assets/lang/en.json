@@ -246,6 +246,8 @@
   "full_name_in_ar": "Full name in Arabic *",
   "full_name_in_en": "Full name in English",
   "guest": "Guest",
+  "home_placeholder_subtitle": "Projects and tasks will show up here soon.",
+  "home_placeholder_title": "Your team space is still empty",
   "invalid_birth_date": "Invalid birth date",
   "invalid_birth_date_format": "Invalid birth date format",
   "invalid_mobile_number": "Invalid mobile number",

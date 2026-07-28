@@ -2,13 +2,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_space/core/helper/extension.dart';
 import 'package:team_space/core/helper/validators.dart';
+import 'package:team_space/core/routing/app_routes.dart';
 import 'package:team_space/core/shared/widgets/app_text_field.dart';
 import 'package:team_space/core/shared/widgets/main_button.dart';
 import 'package:team_space/core/shared/widgets/setup_snack_bar_failure_state.dart';
 import 'package:team_space/core/shared/widgets/setup_snack_bar_for_success_state.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/core/themes/app_text_styles.dart';
+import 'package:team_space/features/auth/presentation/cubit/auth/auth_cubit.dart';
 import 'package:team_space/features/auth/presentation/cubit/login/login_cubit.dart';
 import 'package:team_space/features/auth/presentation/cubit/login/login_state.dart';
 
@@ -127,9 +130,12 @@ class _LoginFormState extends State<LoginForm> {
 
   void _onStateChanged(BuildContext context, LoginState state) {
     switch (state) {
-      case LoginSuccess():
+      case LoginSuccess(:final user):
         setupSnackBarForSuccessState(context, context.tr('Login successful'));
-      // TODO: نروح للـ home بـ pushNamedAndRemoveUntil أول ما الشاشة تتعمل
+        // بنسلّم المستخدم للـ AuthCubit الأول عشان الـ home تلاقي بياناته
+        // جاهزة، وبعدين نمسح الـ stack فمفيش رجوع لشاشة الدخول.
+        context.read<AuthCubit>().onAuthenticated(user);
+        context.pushNamedAndRemoveUntil(AppRoutes.home);
       case LoginError(:final message):
         setupSnackbarForFailureState(
           context,

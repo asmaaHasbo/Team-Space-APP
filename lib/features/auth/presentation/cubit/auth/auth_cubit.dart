@@ -16,8 +16,9 @@ class AuthCubit extends Cubit<AuthState> {
       _logout = logout,
       super(const AuthInitial());
 
-  /// بتتنادى أول ما التطبيق يفتح (من شاشة الـ splash)
+  /// بتتنادى أول ما التطبيق يفتح (من الـ AuthGate)
   Future<void> checkAuthStatus() async {
+    emit(const AuthLoading());
     try {
       final user = await _getCurrentUser();
       emit(user != null ? Authenticated(user) : const Unauthenticated());
