@@ -14,6 +14,13 @@ Before ANY task:
 
 Then **wait for "go"** — never skip, never assume.
 
+## One Step At A Time (MANDATORY)
+Show the full plan up front, then **execute one step only**.
+- Each step must leave `flutter analyze` clean — never a half-applied change
+- Explain the step in 2–3 lines max, label it `Step X of Y`
+- Ask **"فاهمة ولا لأ؟"** and **wait** — never chain steps
+- Exception: only when asked "اعمله كله مرة واحدة", run the whole plan
+
 ## Task Label
 Prefix every task: 🐛 Bug | ✨ Feature | 🔄 Refactor | ❓ Question | 🎨 Style
 
