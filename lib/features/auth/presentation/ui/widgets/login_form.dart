@@ -44,6 +44,10 @@ class _LoginFormState extends State<LoginForm> {
         );
   }
 
+  /// الـ validators بترجّع مفاتيح ترجمة — بنترجمها بـ `context.tr` مش
+  /// `.tr()` عشان الرسالة تتغير مع اللغة من غير reload.
+  String? _translate(String? key) => key == null ? null : context.tr(key);
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -52,7 +56,7 @@ class _LoginFormState extends State<LoginForm> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           AppTextField(
-            label: 'Email'.tr(),
+            label: context.tr('Email'),
             hintText: 'name@company.com',
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
@@ -60,12 +64,12 @@ class _LoginFormState extends State<LoginForm> {
               Icons.mail_outline_rounded,
               color: AppColors.textHint,
             ),
-            validator: (value) => validateEmail(value)?.tr(),
+            validator: (value) => _translate(validateEmail(value)),
           ),
           SizedBox(height: 20.h),
 
           AppTextField(
-            label: 'Password'.tr(),
+            label: context.tr('Password'),
             hintText: '••••••••',
             controller: _passwordController,
             obscureText: _obscurePassword,
@@ -83,7 +87,7 @@ class _LoginFormState extends State<LoginForm> {
                 color: AppColors.textHint,
               ),
             ),
-            validator: (value) => validatePassword(value)?.tr(),
+            validator: (value) => _translate(validatePassword(value)),
           ),
           SizedBox(height: 8.h),
 
@@ -92,10 +96,10 @@ class _LoginFormState extends State<LoginForm> {
             child: TextButton(
               // TODO: نربطه بشاشة استعادة كلمة المرور بعد الـ V1
               onPressed: () =>
-                  setupSnackBarForSuccessState(context, 'Coming soon'.tr()),
+                  setupSnackBarForSuccessState(context, context.tr('Coming soon')),
               child: Text(
-                'Forgot password?'.tr(),
-                style: AppTextStyles.font13Medium.copyWith(
+                context.tr('Forgot password?'),
+                style: AppTextStyles.font14SemiBold.copyWith(
                   color: AppColors.primary,
                 ),
               ),
@@ -108,7 +112,7 @@ class _LoginFormState extends State<LoginForm> {
           BlocConsumer<LoginCubit, LoginState>(
             listener: _onStateChanged,
             builder: (context, state) => MainButton(
-              text: 'Sign in'.tr(),
+              text: context.tr('Sign in'),
               height: 54,
               isLoading: state is LoginLoading,
               onPressed: _submit,
@@ -122,7 +126,7 @@ class _LoginFormState extends State<LoginForm> {
   void _onStateChanged(BuildContext context, LoginState state) {
     switch (state) {
       case LoginSuccess():
-        setupSnackBarForSuccessState(context, 'Login successful'.tr());
+        setupSnackBarForSuccessState(context, context.tr('Login successful'));
       // TODO: نروح للـ home بـ pushNamedAndRemoveUntil أول ما الشاشة تتعمل
       case LoginError(:final message):
         setupSnackbarForFailureState(

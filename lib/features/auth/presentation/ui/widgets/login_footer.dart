@@ -16,17 +16,18 @@ class LoginFooter extends StatelessWidget {
       spacing: 6.w,
       children: [
         Text(
-          "Don't have an account?".tr(),
-          style: AppTextStyles.font13Medium.copyWith(
-            color: AppColors.warning,
+          context.tr("Don't have an account?"),
+          style: AppTextStyles.font14Medium.copyWith(
+            color: AppColors.textSecondary,
           ),
         ),
         GestureDetector(
           // TODO: context.pushNamed(AppRoutes.register) أول ما شاشة التسجيل تتعمل
-          onTap: () => setupSnackBarForSuccessState(context, 'Coming soon'.tr()),
+          onTap: () =>
+              setupSnackBarForSuccessState(context, context.tr('Coming soon')),
           child: Text(
-            'Create an account'.tr(),
-            style: AppTextStyles.font13Bold.copyWith(
+            context.tr('Create an account'),
+            style: AppTextStyles.font14Bold.copyWith(
               color: AppColors.primary,
             ),
           ),

@@ -48,10 +48,10 @@ class AppTheme {
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: AppColors.fieldFill,
-          hintStyle: AppTextStyles.font15Regular.copyWith(
+          hintStyle: AppTextStyles.font16Regular.copyWith(
             color: AppColors.textHint,
           ),
-          errorStyle: AppTextStyles.font12Regular.copyWith(
+          errorStyle: AppTextStyles.font13Regular.copyWith(
             color: AppColors.error,
           ),
           contentPadding: const EdgeInsets.symmetric(

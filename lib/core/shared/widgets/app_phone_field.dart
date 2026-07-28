@@ -52,7 +52,9 @@ class AppPhoneField extends StatelessWidget {
             initialCountryCode: initialCountryCode,
             flagsButtonPadding: EdgeInsets.symmetric(horizontal: 16.w),
             languageCode: context.locale.languageCode,
-            invalidNumberMessage: 'signup.validation.invalidEgyptianPhone'.tr(),
+            invalidNumberMessage: context.tr(
+              'signup.validation.invalidEgyptianPhone',
+            ),
             showDropdownIcon: showDropdownIcon,
             countries: allowedCountryCodes == null
                 ? null
@@ -69,7 +71,7 @@ class AppPhoneField extends StatelessWidget {
             decoration: _buildDecoration(),
             validator: (value) {
               if (value == null || value.number.isEmpty) {
-                return 'signup.validation.required'.tr();
+                return context.tr('signup.validation.required');
               }
               final isValid = validatePhoneNumberForCountry(
                 value.number,
@@ -77,7 +79,7 @@ class AppPhoneField extends StatelessWidget {
               );
               return isValid
                   ? null
-                  : 'signup.validation.invalidEgyptianPhone'.tr();
+                  : context.tr('signup.validation.invalidEgyptianPhone');
             },
           ),
         ),

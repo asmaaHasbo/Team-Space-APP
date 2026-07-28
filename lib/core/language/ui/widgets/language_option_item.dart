@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_space/core/themes/app_colors.dart';
@@ -55,7 +54,8 @@ class LanguageOptionItem extends StatelessWidget {
                   : null,
             ),
             SizedBox(width: 16.w),
-            Text(langName.tr(), style: AppTextStyles.font17Regular),
+            // اسم اللغة بلغتها هي — مش مفتاح ترجمة فمينفعش يتعمله tr()
+            Text(langName, style: AppTextStyles.font17Regular),
           ],
         ),
       ),

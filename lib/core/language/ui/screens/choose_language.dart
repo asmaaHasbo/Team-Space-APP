@@ -18,7 +18,10 @@ Future<void> showLanguageDialog(BuildContext context) {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.large.r),
         ),
-        title: Text('Language'.tr(), style: AppTextStyles.font18SemiBold),
+        title: Text(
+          dialogContext.tr('Language'),
+          style: AppTextStyles.font18SemiBold,
+        ),
         contentPadding: EdgeInsets.symmetric(vertical: 8.h),
         content: Column(
           mainAxisSize: MainAxisSize.min, // مهم: عشان الـ dialog ياخد طول المحتوى بس

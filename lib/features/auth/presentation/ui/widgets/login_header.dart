@@ -28,16 +28,16 @@ class LoginHeader extends StatelessWidget {
         SizedBox(height: 20.h),
         Text(
           'Team Space',
-          style: AppTextStyles.font24Bold.copyWith(
+          style: AppTextStyles.font28Bold.copyWith(
             color: AppColors.textPrimary,
           ),
         ),
         SizedBox(height: 8.h),
         Text(
-          'Welcome back, sign in to continue'.tr(),
+          context.tr('Welcome back, sign in to continue'),
           textAlign: TextAlign.center,
-          style: AppTextStyles.font13Medium.copyWith(
-            color: AppColors.warning,
+          style: AppTextStyles.font15Medium.copyWith(
+            color: AppColors.textSecondary,
           ),
         ),
       ],

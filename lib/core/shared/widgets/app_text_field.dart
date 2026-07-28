@@ -65,7 +65,7 @@ class AppTextField extends StatelessWidget {
               LengthLimitingTextInputFormatter(maxLength ?? 1000),
               ...?inputFormatters,
             ],
-            style: AppTextStyles.font15Medium,
+            style: AppTextStyles.font16Medium,
             validator: (value) => validator?.call(value?.trim()),
             decoration: _buildDecoration(),
           ),

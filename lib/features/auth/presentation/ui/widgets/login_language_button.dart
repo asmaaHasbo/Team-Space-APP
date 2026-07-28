@@ -37,7 +37,7 @@ class LoginLanguageButton extends StatelessWidget {
               SizedBox(width: 6.w),
               Text(
                 AppLocales.nativeNameOf(nextLocale),
-                style: AppTextStyles.font13SemiBold.copyWith(
+                style: AppTextStyles.font14SemiBold.copyWith(
                   color: AppColors.primary,
                 ),
               ),

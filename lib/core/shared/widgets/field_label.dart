@@ -18,7 +18,9 @@ class FieldLabel extends StatelessWidget {
     return RichText(
       text: TextSpan(
         text: "$label ",
-        style: AppTextStyles.font15Medium.copyWith(color: AppColors.black),
+        style: AppTextStyles.font16SemiBold.copyWith(
+          color: AppColors.textPrimary,
+        ),
         children: [
           if (isRequired)
             const TextSpan(text: "*", style: TextStyle(color: AppColors.error)),
