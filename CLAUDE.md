@@ -16,13 +16,17 @@ Then **wait for "go"** — never skip, never assume.
 
 ## One Step At A Time (MANDATORY)
 Show the full plan up front, then **execute one step only**.
-- Each step must leave `flutter analyze` clean — never a half-applied change
-- Explain the step in 2–3 lines max, label it `Step X of Y`
+- Run `flutter analyze` ONCE after the final step only (~2.5 min/run) — never between steps; the IDE flags errors live
+- Explain the step in 2–3 lines max, label it «الخطوة X من Y»
 - Ask **"فاهمة ولا لأ؟"** and **wait** — never chain steps
 - Exception: only when asked "اعمله كله مرة واحدة", run the whole plan
 
 ## Task Label
 Prefix every task: 🐛 Bug | ✨ Feature | 🔄 Refactor | ❓ Question | 🎨 Style
+
+## Reply Format (RTL)
+- Start every line/bullet/heading with an Arabic word — mixed Arabic/English must render right-to-left
+- English terms stay inline mid-sentence, never at line start (e.g. «الـ navigationBarTheme جاهز» not "navigationBarTheme جاهز")
 
 ## Architecture
 - Layers: `presentation → domain → data` — never skip or mix

@@ -276,5 +276,9 @@
   "signup.validation.passportMin6": "Passport number must be at least 6 characters",
   "signup.validation.passwordRule": "Password must be at least 8 characters and include an uppercase letter, a lowercase letter, and a number",
   "signup.validation.passwordsDoNotMatch": "Passwords do not match",
-  "signup.validation.required": "This field is required"
+  "signup.validation.required": "This field is required",
+  "tabs.chats": "Chats",
+  "tabs.profile": "Profile",
+  "tabs.storage": "Storage",
+  "tabs.tasks": "Tasks"
 }

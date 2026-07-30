@@ -276,5 +276,9 @@
   "signup.validation.passportMin6": "يجب أن يتكون رقم الجواز من 6 أحرف على الأقل",
   "signup.validation.passwordRule": "يجب ألا تقل كلمة المرور عن 8 أحرف وتحتوي على حرف كبير وحرف صغير ورقم",
   "signup.validation.passwordsDoNotMatch": "كلمتا المرور غير متطابقتين",
-  "signup.validation.required": "هذا الحقل مطلوب"
+  "signup.validation.required": "هذا الحقل مطلوب",
+  "tabs.chats": "محادثات",
+  "tabs.profile": "حسابي",
+  "tabs.storage": "تخزين",
+  "tabs.tasks": "مهام"
 }
