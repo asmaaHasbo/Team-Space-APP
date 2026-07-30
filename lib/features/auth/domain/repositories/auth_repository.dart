@@ -1,10 +1,12 @@
 import '../entities/app_user.dart';
 
 abstract class AuthRepository {
-  Future<AppUser> register({
-    required String email,
-    required String password,
-  });
+ Future<void> register({
+  required String fullName,
+  required String phone,
+  required String email,
+  required String password,
+});
 
   Future<AppUser> login({
     required String email,
@@ -13,5 +15,9 @@ abstract class AuthRepository {
 
   Future<void> logout();
 
-  AppUser? getCurrentUser();
+  Future<AppUser?> getCurrentUser();
+
+  /// المستخدم الحالي كل ما جلسة تتفتح أو تتقفل — بيغطي الدخول اللي بيحصل
+  /// من بره التطبيق (لينك تأكيد الإيميل).
+  Stream<AppUser?> watchAuthState();
 }

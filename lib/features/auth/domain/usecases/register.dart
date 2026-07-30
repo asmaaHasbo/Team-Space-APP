@@ -1,4 +1,3 @@
-import '../entities/app_user.dart';
 import '../repositories/auth_repository.dart';
 
 class Register {
@@ -6,10 +5,18 @@ class Register {
 
   Register(this.repository);
 
-  Future<AppUser> call({
+  
+  Future<void> call({
+    required String fullName,
+    required String phone,
     required String email,
     required String password,
   }) {
-    return repository.register(email: email, password: password);
+    return repository.register(
+      fullName: fullName,
+      phone: phone,
+      email: email,
+      password: password,
+    );
   }
 }
