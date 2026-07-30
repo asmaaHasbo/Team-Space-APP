@@ -30,8 +30,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl(this._client);
 
   @override
- @override
-Future<void> register({
+  Future<void> register({
   required String fullName,
   required String phone,
   required String email,
@@ -76,7 +75,9 @@ Future<void> register({
       if (user == null) {
         throw const ServerException('Sign in returned no user');
       }
-      return _buildFromProfile(user);
+      // `await` مقصود: من غيره الـ Future بيتحل بره الـ try، والـ catch
+      // تحته بيبقى كود ميت — الخطأ بيعدي خام من غير ما يتحول لـ AppException.
+      return await _buildFromProfile(user);
     } catch (e) {
       return handleError(e);
     }
@@ -107,7 +108,7 @@ Future<void> register({
 
       final user = _client.auth.currentUser;
       if (user == null) return null;
-      return _buildFromProfile(user);
+      return await _buildFromProfile(user);
     } catch (e) {
       handleError(e);
     }
