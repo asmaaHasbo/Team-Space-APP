@@ -31,12 +31,12 @@ class AppTheme {
     ),
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: AppColors.surface,
-      indicatorColor: AppColors.primary,
+      indicatorColor: AppColors.primary.withValues(alpha: 0.12),
       surfaceTintColor: Colors.transparent,
       iconTheme: WidgetStateProperty.resolveWith(
         (states) => IconThemeData(
           color: states.contains(WidgetState.selected)
-              ? AppColors.white
+              ? AppColors.primary
               : AppColors.textSecondary,
         ),
       ),

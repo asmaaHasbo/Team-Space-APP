@@ -5,24 +5,40 @@ import 'package:team_space/core/themes/app_text_styles.dart';
 
 class HomeUserAvatar extends StatelessWidget {
   final String name;
+  final double size;
+  final Color backgroundColor;
+  final Color foregroundColor;
+  final TextStyle? textStyle;
 
-  const HomeUserAvatar({super.key, required this.name});
+  const HomeUserAvatar({
+    super.key,
+    required this.name,
+    this.size = 44,
+    this.backgroundColor = AppColors.primarySurface,
+    this.foregroundColor = AppColors.primary,
+    this.textStyle,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final letter = name.isEmpty ? '?' : name.substring(0, 1).toUpperCase();
+    final trimmed = name.trim();
+    final letters = trimmed.isEmpty
+        ? '?'
+        : trimmed.substring(0, trimmed.length >= 2 ? 2 : 1).toUpperCase();
 
     return Container(
-      width: 44.w,
-      height: 44.w,
+      width: size.w,
+      height: size.w,
       alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        color: AppColors.primarySurface,
+      decoration: BoxDecoration(
+        color: backgroundColor,
         shape: BoxShape.circle,
       ),
       child: Text(
-        letter,
-        style: AppTextStyles.font18Bold.copyWith(color: AppColors.primary),
+        letters,
+        style: (textStyle ?? AppTextStyles.font18Bold).copyWith(
+          color: foregroundColor,
+        ),
       ),
     );
   }
