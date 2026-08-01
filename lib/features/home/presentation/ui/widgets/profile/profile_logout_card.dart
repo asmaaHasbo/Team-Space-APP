@@ -4,26 +4,34 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_space/core/shared/widgets/show_confirm_dialog.dart';
 import 'package:team_space/core/themes/app_colors.dart';
+import 'package:team_space/core/themes/app_radius.dart';
 import 'package:team_space/features/auth/presentation/cubit/auth/auth_cubit.dart';
+import 'package:team_space/features/home/presentation/ui/widgets/profile/profile_settings_tile.dart';
 
-class HomeLogoutButton extends StatelessWidget {
-  const HomeLogoutButton({super.key});
+class ProfileLogoutCard extends StatelessWidget {
+  const ProfileLogoutCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      tooltip: context.tr('Logout'),
-      onPressed: () => _confirmThenLogout(context),
-      icon: Icon(
-        Icons.logout_rounded,
-        color: AppColors.error,
-        size: 22.sp,
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: 4.h),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.large.r),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: ProfileSettingsTile(
+        icon: Icons.logout_rounded,
+        iconColor: AppColors.error,
+        title: context.tr('Logout'),
+        titleColor: AppColors.error,
+        showChevron: false,
+        onTap: () => _confirmThenLogout(context),
       ),
     );
   }
 
-  /// بنمسك الـ cubit قبل الـ await عشان مانستخدمش الـ context بعده.
-  /// التنقّل لشاشة الدخول مش هنا — الـ HomeScreen بيسمع الحالة ويتصرف.
   Future<void> _confirmThenLogout(BuildContext context) async {
     final authCubit = context.read<AuthCubit>();
 

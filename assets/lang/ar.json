@@ -257,6 +257,10 @@
   "passwordMax128": "كلمة المرور يجب ألا تتجاوز 128 حرفاً",
   "passwordMin6": "كلمة المرور يجب ألا تقل عن 6 أحرف",
   "proceed": "متابعة",
+  "profile.app": "التطبيق",
+  "profile.myTasks": "مهام عليّا",
+  "profile.overdue": "متأخرة",
+  "profile.spaces": "المساحات",
   "profile_image_required": "الصورة الشخصية مطلوبة",
   "signup.attachFile": "إرفاق ملف",
   "signup.createAccount": "إنشاء حساب",
@@ -276,5 +280,9 @@
   "signup.validation.passportMin6": "يجب أن يتكون رقم الجواز من 6 أحرف على الأقل",
   "signup.validation.passwordRule": "يجب ألا تقل كلمة المرور عن 8 أحرف وتحتوي على حرف كبير وحرف صغير ورقم",
   "signup.validation.passwordsDoNotMatch": "كلمتا المرور غير متطابقتين",
-  "signup.validation.required": "هذا الحقل مطلوب"
+  "signup.validation.required": "هذا الحقل مطلوب",
+  "tabs.chats": "محادثات",
+  "tabs.profile": "حسابي",
+  "tabs.storage": "تخزين",
+  "tabs.tasks": "مهام"
 }

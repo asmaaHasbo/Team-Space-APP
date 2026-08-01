@@ -257,6 +257,10 @@
   "passwordMax128": "Password must not exceed 128 characters",
   "passwordMin6": "Password must be at least 6 characters",
   "proceed": "Proceed",
+  "profile.app": "App",
+  "profile.myTasks": "My tasks",
+  "profile.overdue": "Overdue",
+  "profile.spaces": "Spaces",
   "profile_image_required": "Profile image is required",
   "signup.attachFile": "Attach File",
   "signup.createAccount": "Create an Account",
@@ -276,5 +280,9 @@
   "signup.validation.passportMin6": "Passport number must be at least 6 characters",
   "signup.validation.passwordRule": "Password must be at least 8 characters and include an uppercase letter, a lowercase letter, and a number",
   "signup.validation.passwordsDoNotMatch": "Passwords do not match",
-  "signup.validation.required": "This field is required"
+  "signup.validation.required": "This field is required",
+  "tabs.chats": "Chats",
+  "tabs.profile": "Profile",
+  "tabs.storage": "Storage",
+  "tabs.tasks": "Tasks"
 }
