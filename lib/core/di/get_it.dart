@@ -1,5 +1,12 @@
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:team_space/features/spaces/data/datasources/spaces_remote_data_source.dart';
+import 'package:team_space/features/spaces/data/repositories/spaces_repository_impl.dart';
+import 'package:team_space/features/spaces/domain/repositories/spaces_repository.dart';
+import 'package:team_space/features/spaces/domain/usecases/create_space.dart';
+import 'package:team_space/features/spaces/domain/usecases/get_my_spaces.dart';
+import 'package:team_space/features/spaces/domain/usecases/join_by_code.dart';
+import 'package:team_space/features/spaces/presentation/cubit/spaces_cubit.dart';
 
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
@@ -46,6 +53,30 @@ Future<void> setupGetIt() async {
   getIt.registerFactory<LoginCubit>(() => LoginCubit(login: getIt()));
   getIt.registerFactory<RegisterCubit>(() => RegisterCubit(register: getIt()));
 
+  //-------------------------------- spaces -------------------
+
+ // data source
+  getIt.registerLazySingleton<SpacesRemoteDataSource>(
+    () => SpacesRemoteDataSourceImpl(getIt<SupabaseClient>()),
+  );
+
+  // repository
+  getIt.registerLazySingleton<SpacesRepository>(
+    () => SpacesRepositoryImpl(getIt<SpacesRemoteDataSource>()),
+  );
+
+  // usecases
+  getIt.registerLazySingleton(() => GetMySpaces(getIt<SpacesRepository>()));
+  getIt.registerLazySingleton(() => CreateSpace(getIt<SpacesRepository>()));
+  getIt.registerLazySingleton(() => JoinByCode(getIt<SpacesRepository>()));
   
+  // cubit
+  getIt.registerLazySingleton(
+  () => SpacesCubit(
+    getMySpaces: getIt<GetMySpaces>(),
+    createSpace: getIt<CreateSpace>(),
+    joinByCode: getIt<JoinByCode>(),
+  ),
+);
 
 }
