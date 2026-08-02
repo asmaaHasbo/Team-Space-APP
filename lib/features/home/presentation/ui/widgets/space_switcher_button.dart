@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,20 +11,10 @@ class SpaceSwitcherButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SpacesCubit, SpacesState>(
-      builder: (context, state) {
-        return switch (state) {
-          SpacesLoaded(:final selectedSpace) => _SwitcherLabel(
-            name: selectedSpace.name,
-          ),
-          SpacesEmpty() => _SwitcherLabel(name: 'No spaces yet'),
-          SpacesLoading() || SpacesInitial() => _SwitcherLabel(
-            name: 'Loading...',
-          ),
-          SpacesError(:final message) => _SwitcherLabel(name: message),
-          _ => _SwitcherLabel(name:'Unknown state'),
-        };
-      },
+    return BlocSelector<SpacesCubit, SpacesState, String?>(
+      selector: (state) => state is SpacesLoaded ? state.selectedSpace.name : null,
+      builder: (context, name) =>
+          _SwitcherLabel(name: name ?? context.tr('loading')),
     );
   }
 }
