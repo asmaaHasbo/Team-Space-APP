@@ -18,19 +18,28 @@ class SpacesCubit extends Cubit<SpacesState> {
     required GetMySpaces getMySpaces,
     required CreateSpace createSpace,
     required JoinByCode joinByCode,
-  })  : _getMySpaces = getMySpaces,
-        _createSpace = createSpace,
-        _joinByCode = joinByCode,
-        super(const SpacesInitial());
+  }) : _getMySpaces = getMySpaces,
+       _createSpace = createSpace,
+       _joinByCode = joinByCode,
+       super(const SpacesInitial());
 
   // the durable list — survives action-state changes
   List<Space> _spaces = [];
+  Space? _selectedSpace;
 
   Future<void> getMySpaces() async {
     emit(const SpacesLoading());
     try {
       _spaces = await _getMySpaces();
-      emit(SpacesLoaded(_spaces));
+
+      if (_spaces.isEmpty) {
+        _selectedSpace = null;
+        emit(const SpacesEmpty());
+        return;
+      }
+
+      _selectedSpace ??= _spaces.first;
+      emit(SpacesLoaded(_spaces, _selectedSpace!));
     } on AppException catch (e) {
       emit(SpacesError(e.message));
     }

@@ -8,22 +8,20 @@ import 'package:team_space/core/routing/app_router.dart';
 import 'package:team_space/core/routing/app_routes.dart';
 import 'package:team_space/core/themes/app_theme.dart';
 import 'package:team_space/features/auth/presentation/cubit/auth/auth_cubit.dart';
+import 'package:team_space/features/spaces/presentation/cubit/spaces_cubit.dart';
 
 class TeamSpaceApp extends StatelessWidget {
   const TeamSpaceApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // بنقرأ اللغة هنا (بره الـ builder) عشان الـ widget ده يبقى معتمد على
-    // EasyLocalization، فأي setLocale يعمل rebuild يوصل للـ MaterialApp.
     final locale = context.locale;
 
-    // الـ AuthCubit فوق الـ MaterialApp عشان يبقى مصدر واحد لحالة الجلسة
-    // تشوفه كل الشاشات — لو اتحط جوّه route كان هيتولد من أول وجديد.
-    return BlocProvider<AuthCubit>(
-      create: (_) => getIt<AuthCubit>(),
-      // كل تنقّل سببه تغيّر الجلسة بيتم من هنا وبس — سواء دخول من الشاشة،
-      // أو من لينك الإيميل، أو خروج. الشاشات نفسها مبقتش تعرف حاجة عن ده.
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthCubit>.value(value: getIt<AuthCubit>()),
+        BlocProvider<SpacesCubit>.value(value: getIt<SpacesCubit>()),
+      ],
       child: BlocListener<AuthCubit, AuthState>(
         listener: _onAuthChanged,
         child: ScreenUtilInit(

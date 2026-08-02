@@ -55,7 +55,7 @@ Future<void> setupGetIt() async {
 
   //-------------------------------- spaces -------------------
 
- // data source
+  // data source
   getIt.registerLazySingleton<SpacesRemoteDataSource>(
     () => SpacesRemoteDataSourceImpl(getIt<SupabaseClient>()),
   );
@@ -69,14 +69,13 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton(() => GetMySpaces(getIt<SpacesRepository>()));
   getIt.registerLazySingleton(() => CreateSpace(getIt<SpacesRepository>()));
   getIt.registerLazySingleton(() => JoinByCode(getIt<SpacesRepository>()));
-  
+
   // cubit
   getIt.registerLazySingleton(
-  () => SpacesCubit(
-    getMySpaces: getIt<GetMySpaces>(),
-    createSpace: getIt<CreateSpace>(),
-    joinByCode: getIt<JoinByCode>(),
-  ),
-);
-
+    () => SpacesCubit(
+      getMySpaces: getIt<GetMySpaces>(),
+      createSpace: getIt<CreateSpace>(),
+      joinByCode: getIt<JoinByCode>(),
+    ),
+  );
 }

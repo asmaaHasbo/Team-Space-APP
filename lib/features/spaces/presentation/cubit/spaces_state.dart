@@ -18,9 +18,15 @@ final class SpacesLoading extends SpacesState {
 
 final class SpacesLoaded extends SpacesState {
   final List<Space> spaces;
-  const SpacesLoaded(this.spaces);
+ final Space selectedSpace;
+
+  const SpacesLoaded(this.spaces, this.selectedSpace);
+
   @override
-  List<Object?> get props => [spaces];
+  List<Object?> get props => [spaces, selectedSpace];
+}
+final class SpacesEmpty extends SpacesState {
+  const SpacesEmpty();
 }
 
 final class SpacesError extends SpacesState {

@@ -1,10 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_space/features/home/presentation/ui/widgets/space_switcher_button.dart';
 import 'package:team_space/features/home/presentation/ui/widgets/tabs/chats_tab.dart';
 import 'package:team_space/features/home/presentation/ui/widgets/tabs/profile_tab.dart';
 import 'package:team_space/features/home/presentation/ui/widgets/tabs/storage_tab.dart';
 import 'package:team_space/features/home/presentation/ui/widgets/tabs/tasks_tab.dart';
+import 'package:team_space/features/spaces/presentation/cubit/spaces_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,6 +18,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    context.read<SpacesCubit>().getMySpaces();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
