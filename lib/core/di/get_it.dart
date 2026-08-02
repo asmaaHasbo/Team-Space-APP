@@ -45,4 +45,7 @@ Future<void> setupGetIt() async {
   );
   getIt.registerFactory<LoginCubit>(() => LoginCubit(login: getIt()));
   getIt.registerFactory<RegisterCubit>(() => RegisterCubit(register: getIt()));
+
+  
+
 }
