@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:team_space/core/language/app_locales.dart';
 import 'package:team_space/core/language/ui/screens/choose_language.dart';
 import 'package:team_space/core/themes/app_colors.dart';
-import 'package:team_space/features/home/presentation/ui/widgets/profile/profile_settings_tile.dart';
+import 'package:team_space/features/profile/presentation/ui/widgets/profile_settings_tile.dart';
 
 class ProfileLanguageTile extends StatelessWidget {
   const ProfileLanguageTile({super.key});

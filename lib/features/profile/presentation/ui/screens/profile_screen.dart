@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/core/themes/app_text_styles.dart';
-import 'package:team_space/features/home/presentation/ui/widgets/profile/profile_header.dart';
-import 'package:team_space/features/home/presentation/ui/widgets/profile/profile_language_tile.dart';
-import 'package:team_space/features/home/presentation/ui/widgets/profile/profile_logout_card.dart';
-import 'package:team_space/features/home/presentation/ui/widgets/profile/profile_section_card.dart';
-import 'package:team_space/features/home/presentation/ui/widgets/profile/profile_stats_card.dart';
+import 'package:team_space/features/profile/presentation/ui/widgets/profile_header.dart';
+import 'package:team_space/features/profile/presentation/ui/widgets/profile_language_tile.dart';
+import 'package:team_space/features/profile/presentation/ui/widgets/profile_logout_card.dart';
+import 'package:team_space/features/profile/presentation/ui/widgets/profile_section_card.dart';
+import 'package:team_space/features/profile/presentation/ui/widgets/profile_stats_card.dart';
 
-class ProfileTab extends StatelessWidget {
-  const ProfileTab({super.key});
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

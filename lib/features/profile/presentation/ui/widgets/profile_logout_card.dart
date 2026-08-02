@@ -6,7 +6,7 @@ import 'package:team_space/core/shared/widgets/show_confirm_dialog.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/core/themes/app_radius.dart';
 import 'package:team_space/features/auth/presentation/cubit/auth/auth_cubit.dart';
-import 'package:team_space/features/home/presentation/ui/widgets/profile/profile_settings_tile.dart';
+import 'package:team_space/features/profile/presentation/ui/widgets/profile_settings_tile.dart';
 
 class ProfileLogoutCard extends StatelessWidget {
   const ProfileLogoutCard({super.key});

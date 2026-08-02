@@ -2,12 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_space/core/shared/widgets/user_avatar.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/core/themes/app_radius.dart';
 import 'package:team_space/core/themes/app_text_styles.dart';
 import 'package:team_space/features/auth/domain/entities/app_user.dart';
 import 'package:team_space/features/auth/presentation/cubit/auth/auth_cubit.dart';
-import 'package:team_space/features/home/presentation/ui/widgets/home_user_avatar.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({super.key});
@@ -48,7 +48,7 @@ class ProfileHeader extends StatelessWidget {
                   width: 2,
                 ),
               ),
-              child: HomeUserAvatar(
+              child: UserAvatar(
                 name: user?.nameOrEmail ?? '',
                 size: 72,
                 backgroundColor: AppColors.white,

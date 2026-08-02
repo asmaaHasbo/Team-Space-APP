@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/core/themes/app_radius.dart';
-import 'package:team_space/features/home/presentation/ui/widgets/profile/profile_stat_item.dart';
+import 'package:team_space/features/profile/presentation/ui/widgets/profile_stat_item.dart';
 
 class ProfileStatsCard extends StatelessWidget {
   const ProfileStatsCard({super.key});

@@ -3,14 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/core/themes/app_text_styles.dart';
 
-class HomeUserAvatar extends StatelessWidget {
+class UserAvatar extends StatelessWidget {
   final String name;
   final double size;
   final Color backgroundColor;
   final Color foregroundColor;
   final TextStyle? textStyle;
 
-  const HomeUserAvatar({
+  const UserAvatar({
     super.key,
     required this.name,
     this.size = 44,
