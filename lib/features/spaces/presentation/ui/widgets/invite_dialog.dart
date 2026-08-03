@@ -5,24 +5,25 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:team_space/core/shared/widgets/setup_snack_bar_for_success_state.dart';
 import 'package:team_space/core/themes/app_colors.dart';
+import 'package:team_space/core/themes/app_radius.dart';
 import 'package:team_space/core/themes/app_text_styles.dart';
 import 'package:team_space/features/spaces/domain/entities/space.dart';
 import 'package:team_space/features/spaces/presentation/ui/widgets/invite_code_box.dart';
-import 'package:team_space/features/spaces/presentation/ui/widgets/invite_sheet_actions.dart';
-import 'package:team_space/features/spaces/presentation/ui/widgets/invite_sheet_header.dart';
+import 'package:team_space/features/spaces/presentation/ui/widgets/invite_dialog_actions.dart';
+import 'package:team_space/features/spaces/presentation/ui/widgets/invite_dialog_header.dart';
 
-
-class InviteSheet extends StatelessWidget {
+/// Shows the invite code of a space and lets the user copy or share it.
+/// It takes the whole [Space] so adding the invite link later needs no
+/// change to its signature.
+class InviteDialog extends StatelessWidget {
   final Space space;
 
-  const InviteSheet({super.key, required this.space});
+  const InviteDialog({super.key, required this.space});
 
   static void show(BuildContext context, Space space) {
-    showModalBottomSheet(
+    showDialog(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => InviteSheet(space: space),
+      builder: (_) => InviteDialog(space: space),
     );
   }
 
@@ -41,30 +42,22 @@ class InviteSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
+    return Dialog(
+      backgroundColor: AppColors.white,
+      insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.large.r),
+      ),
+      child: Padding(
         padding: EdgeInsets.all(20.w),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 40.w,
-              height: 4.h,
-              decoration: BoxDecoration(
-                color: AppColors.border,
-                borderRadius: BorderRadius.circular(2.r),
-              ),
-            ),
-            SizedBox(height: 20.h),
-            InviteSheetHeader(spaceName: space.name),
+            InviteDialogHeader(spaceName: space.name),
             SizedBox(height: 20.h),
             InviteCodeBox(inviteCode: space.inviteCode),
             SizedBox(height: 20.h),
-            InviteSheetActions(
+            InviteDialogActions(
               onCopy: () => _copyCode(context),
               onShare: () => Share.share(_shareText(context)),
             ),

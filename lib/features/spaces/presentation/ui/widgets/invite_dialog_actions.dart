@@ -5,11 +5,11 @@ import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/core/themes/app_radius.dart';
 import 'package:team_space/core/themes/app_text_styles.dart';
 
-class InviteSheetActions extends StatelessWidget {
+class InviteDialogActions extends StatelessWidget {
   final VoidCallback onCopy;
   final VoidCallback onShare;
 
-  const InviteSheetActions({
+  const InviteDialogActions({
     super.key,
     required this.onCopy,
     required this.onShare,

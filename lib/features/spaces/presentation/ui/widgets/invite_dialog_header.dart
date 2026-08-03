@@ -4,10 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/core/themes/app_text_styles.dart';
 
-class InviteSheetHeader extends StatelessWidget {
+class InviteDialogHeader extends StatelessWidget {
   final String spaceName;
 
-  const InviteSheetHeader({super.key, required this.spaceName});
+  const InviteDialogHeader({super.key, required this.spaceName});
 
   @override
   Widget build(BuildContext context) {
