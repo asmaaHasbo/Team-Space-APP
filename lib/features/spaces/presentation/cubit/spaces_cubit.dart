@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:team_space/core/helper/app_preferences.dart';
 
 import '../../domain/entities/space.dart';
 import '../../domain/usecases/get_my_spaces.dart';
@@ -13,14 +14,17 @@ class SpacesCubit extends Cubit<SpacesState> {
   final GetMySpaces _getMySpaces;
   final CreateSpace _createSpace;
   final JoinByCode _joinByCode;
+  final AppPreferences _prefs;
 
   SpacesCubit({
     required GetMySpaces getMySpaces,
     required CreateSpace createSpace,
     required JoinByCode joinByCode,
+    required AppPreferences prefs,
   }) : _getMySpaces = getMySpaces,
        _createSpace = createSpace,
        _joinByCode = joinByCode,
+       _prefs = prefs,
        super(const SpacesInitial());
 
   // the durable list — survives action-state changes
@@ -31,14 +35,15 @@ class SpacesCubit extends Cubit<SpacesState> {
     emit(const SpacesLoading());
     try {
       _spaces = await _getMySpaces();
-
       if (_spaces.isEmpty) {
         _selectedSpace = null;
         emit(const SpacesEmpty());
         return;
       }
 
-      _selectedSpace ??= _spaces.first;
+      final savedId = _prefs.getSelectedSpaceId();
+      _selectedSpace =
+          _spaces.where((s) => s.id == savedId).firstOrNull ?? _spaces.first;
       emit(SpacesLoaded(_spaces, _selectedSpace!));
     } on AppException catch (e) {
       emit(SpacesError(e.message));
@@ -65,5 +70,11 @@ class SpacesCubit extends Cubit<SpacesState> {
     } on AppException catch (e) {
       emit(JoinSpaceError(e.message));
     }
+  }
+
+  void selectSpace(Space space) {
+    _selectedSpace = space;
+    _prefs.setSelectedSpaceId(space.id);
+    emit(SpacesLoaded(_spaces, space));
   }
 }

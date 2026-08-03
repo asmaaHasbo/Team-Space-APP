@@ -17,10 +17,7 @@ class NoSpaceActions extends StatelessWidget {
         MainButton(
           text: context.tr('spaces.noSpace.create'),
           onPressed: () {
-            showDialog(
-              context: context,
-              builder: (_) => const CreateSpaceDialog(),
-            );
+            CreateSpaceDialog.show(context);
           },
         ),
         SizedBox(height: 12.h),

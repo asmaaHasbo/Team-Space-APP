@@ -290,6 +290,7 @@
   "spaces.noSpace.join": "Join a space",
   "spaces.noSpace.subtitle": "Chats, tasks and files all live inside a space. Create one",
   "spaces.noSpace.title": "You're not in any space yet",
+  "spaces.switcher.title": "Choose a space",
   "tabs.chats": "Chats",
   "tabs.profile": "Profile",
   "tabs.storage": "Storage",

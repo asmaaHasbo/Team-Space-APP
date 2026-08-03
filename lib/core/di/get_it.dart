@@ -1,5 +1,7 @@
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:team_space/core/helper/app_preferences.dart';
 import 'package:team_space/features/spaces/data/datasources/spaces_remote_data_source.dart';
 import 'package:team_space/features/spaces/data/repositories/spaces_repository_impl.dart';
 import 'package:team_space/features/spaces/domain/repositories/spaces_repository.dart';
@@ -24,6 +26,10 @@ final getIt = GetIt.instance;
 
 /// بتتنادى مرة واحدة في الـ main بعد `Supabase.initialize`
 Future<void> setupGetIt() async {
+  
+  final prefs = await SharedPreferences.getInstance();
+  getIt.registerLazySingleton(() => AppPreferences(prefs));
+ 
   //==================== external ====================
   getIt.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
 
@@ -76,6 +82,7 @@ Future<void> setupGetIt() async {
       getMySpaces: getIt<GetMySpaces>(),
       createSpace: getIt<CreateSpace>(),
       joinByCode: getIt<JoinByCode>(),
+      prefs: getIt<AppPreferences>(),
     ),
   );
 }

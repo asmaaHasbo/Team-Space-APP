@@ -11,6 +11,13 @@ class CreateSpaceDialog extends StatefulWidget {
 
   @override
   State<CreateSpaceDialog> createState() => _CreateSpaceDialogState();
+
+  static void show(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => const CreateSpaceDialog(),
+    );
+  }
 }
 
 class _CreateSpaceDialogState extends State<CreateSpaceDialog> {
@@ -63,6 +70,7 @@ class _CreateSpaceDialogState extends State<CreateSpaceDialog> {
             ),
             SizedBox(
               width: 120.w,
+              height: 40.h,
               child: MainButton(
                 text: context.tr('spaces.create.confirm'),
                 isLoading: isLoading,

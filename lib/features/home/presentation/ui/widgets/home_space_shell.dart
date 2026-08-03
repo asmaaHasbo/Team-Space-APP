@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:team_space/features/home/presentation/ui/widgets/create_space_dialog.dart';
 import 'package:team_space/features/home/presentation/ui/widgets/home_bottom_nav.dart';
 import 'package:team_space/features/home/presentation/ui/widgets/space_switcher_button.dart';
 import 'package:team_space/features/home/presentation/ui/widgets/tabs/chats_tab.dart';
@@ -23,7 +24,17 @@ class _HomeSpaceShellState extends State<HomeSpaceShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const SpaceSwitcherButton()),
+      appBar: AppBar(
+        title: const SpaceSwitcherButton(),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              CreateSpaceDialog.show(context);
+            },
+          ),
+        ],
+      ),
       body: IndexedStack(
         index: _currentIndex,
         children: const [ChatsTab(), TasksTab(), StorageTab(), ProfileScreen()],
