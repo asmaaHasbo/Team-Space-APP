@@ -5,7 +5,7 @@ import 'package:team_space/core/shared/widgets/main_button.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/core/themes/app_radius.dart';
 import 'package:team_space/core/themes/app_text_styles.dart';
-import 'package:team_space/features/home/presentation/ui/widgets/create_space_dialog.dart';
+import 'package:team_space/features/home/presentation/ui/widgets/space_action_dialog.dart';
 
 class NoSpaceActions extends StatelessWidget {
   const NoSpaceActions({super.key});
@@ -17,7 +17,7 @@ class NoSpaceActions extends StatelessWidget {
         MainButton(
           text: context.tr('spaces.noSpace.create'),
           onPressed: () {
-            CreateSpaceDialog.show(context);
+            SpaceActionDialog.show(context, SpaceDialogMode.create);
           },
         ),
         SizedBox(height: 12.h),
@@ -26,7 +26,7 @@ class NoSpaceActions extends StatelessWidget {
           height: 61.h,
           child: OutlinedButton(
             onPressed: () {
-              // TODO: open join-space dialog
+              SpaceActionDialog.show(context, SpaceDialogMode.join);
             },
             style: OutlinedButton.styleFrom(
               side: const BorderSide(color: AppColors.primary),

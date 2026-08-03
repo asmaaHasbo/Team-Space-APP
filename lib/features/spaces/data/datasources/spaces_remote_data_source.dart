@@ -44,33 +44,37 @@ class SpacesRemoteDataSourceImpl implements SpacesRemoteDataSource {
   }
 
   @override
+  @override
   Future<SpaceModel> joinByCode({required String inviteCode}) async {
+    final Map<String, dynamic>? spaceRow;
+
     try {
-      // 1. Find the space by its invite code (throws if code is wrong —
-      //    caught below and surfaced to the cubit).
-      final spaceRow = await _client
+      spaceRow = await _client
           .from('spaces')
           .select()
           .eq('invite_code', inviteCode)
-          .single();
+          .maybeSingle();
+    } catch (e) {
+      return handleError(e); // أعطال حقيقية: نت أو سيرفر
+    }
 
-      final space = SpaceModel.fromJson(spaceRow);
+    // بره الـ try — عشان handleError ما يلفّهاش تاني
+    if (spaceRow == null) {
+      throw AuthFailureException('Invalid invite code');
+    }
 
-      // 2. Add myself as a member. upsert + ignoreDuplicates: if I'm
-      //    already in this space, do nothing (don't overwrite my role) —
-      //    so re-clicking an invite link just lets me back in cleanly.
-      await _client.from('space_members').upsert(
-        {
-          'space_id': space.id,
-          'user_id': _client.auth.currentUser!.id,
-          'role': 'member',
-        },
-        ignoreDuplicates: true,
-      );
+    final space = SpaceModel.fromJson(spaceRow);
 
-      return space;
+    try {
+      await _client.from('space_members').upsert({
+        'space_id': space.id,
+        'user_id': _client.auth.currentUser!.id,
+        'role': 'member',
+      }, ignoreDuplicates: true);
     } catch (e) {
       return handleError(e);
     }
+
+    return space;
   }
 }
