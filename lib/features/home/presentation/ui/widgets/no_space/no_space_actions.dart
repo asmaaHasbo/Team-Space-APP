@@ -5,6 +5,7 @@ import 'package:team_space/core/shared/widgets/main_button.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/core/themes/app_radius.dart';
 import 'package:team_space/core/themes/app_text_styles.dart';
+import 'package:team_space/features/home/presentation/ui/widgets/create_space_dialog.dart';
 
 class NoSpaceActions extends StatelessWidget {
   const NoSpaceActions({super.key});
@@ -16,7 +17,10 @@ class NoSpaceActions extends StatelessWidget {
         MainButton(
           text: context.tr('spaces.noSpace.create'),
           onPressed: () {
-            // TODO: open create-space dialog
+            showDialog(
+              context: context,
+              builder: (_) => const CreateSpaceDialog(),
+            );
           },
         ),
         SizedBox(height: 12.h),
