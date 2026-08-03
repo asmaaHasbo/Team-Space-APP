@@ -49,6 +49,7 @@ dependencies:
   file_picker: ^11.0.2
   country_phone_validator: ^1.0.2
   shared_preferences: ^2.5.5
+  share_plus: ^10.1.4
   flutter_localizations:
     sdk: flutter
 

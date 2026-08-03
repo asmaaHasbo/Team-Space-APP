@@ -6,6 +6,7 @@ import 'package:team_space/core/shared/widgets/main_button.dart';
 import 'package:team_space/core/shared/widgets/setup_snack_bar_failure_state.dart';
 import 'package:team_space/core/themes/app_text_styles.dart';
 import 'package:team_space/features/spaces/presentation/cubit/spaces_cubit.dart';
+import 'package:team_space/features/spaces/presentation/ui/widgets/invite_sheet.dart';
 
 /// The two space actions that share the very same single-field dialog:
 /// creating a space by name, or joining an existing one by invite code.
@@ -73,7 +74,13 @@ class _SpaceActionDialogState extends State<SpaceActionDialog> {
           _isSuccess(current) || _errorMessage(current) != null,
       listener: (context, state) {
         if (_isSuccess(state)) {
-          Navigator.of(context).pop();
+          // The dialog's context dies with the pop, so the sheet is opened
+          // from the navigator that outlives it.
+          final navigator = Navigator.of(context);
+          navigator.pop();
+          if (state is CreateSpaceSuccess) {
+            InviteSheet.show(navigator.context, state.space);
+          }
           return;
         }
 

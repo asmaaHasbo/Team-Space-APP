@@ -42,7 +42,11 @@ final class CreateSpaceLoading extends SpacesState {
 }
 
 final class CreateSpaceSuccess extends SpacesState {
-  const CreateSpaceSuccess();
+  final Space space;
+  const CreateSpaceSuccess(this.space);
+
+  @override
+  List<Object?> get props => [space];
 }
 
 final class CreateSpaceError extends SpacesState {

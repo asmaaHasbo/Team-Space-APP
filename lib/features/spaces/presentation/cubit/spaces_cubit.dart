@@ -53,9 +53,9 @@ class SpacesCubit extends Cubit<SpacesState> {
   Future<void> createSpace(String name) async {
     emit(const CreateSpaceLoading());
     try {
-      await _createSpace(name: name);
-      emit(const CreateSpaceSuccess());
-      await getMySpaces(); // refresh the list from the server
+      final space = await _createSpace(name: name);
+      emit(CreateSpaceSuccess(space));
+      await getMySpaces();
     } on AppException catch (e) {
       emit(CreateSpaceError(e.message));
     }
