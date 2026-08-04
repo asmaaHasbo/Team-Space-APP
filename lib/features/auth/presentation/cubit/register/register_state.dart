@@ -14,6 +14,11 @@ final class RegisterLoading extends RegisterState {
   const RegisterLoading();
 }
 
+/// نجح التسجيل والجلسة اتفتحت على طول — بيحصل لما التأكيد يبقى مقفول
+final class RegisterSuccess extends RegisterState {
+  const RegisterSuccess();
+}
+
 /// نجح التسجيل بس لسه محتاج يأكّد إيميله قبل ما يقدر يدخل
 final class RegisterEmailConfirmationRequired extends RegisterState {
   final String email;

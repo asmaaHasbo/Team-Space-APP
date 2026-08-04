@@ -1,5 +1,6 @@
 // lib/features/auth/data/datasources/auth_remote_data_source.dart
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:team_space/core/constants/app_flags.dart';
 
 import '../../../../core/constants/app_deep_links.dart';
 import '../../../../core/error/handle_errors.dart';
@@ -49,16 +50,21 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   final user = res.user;
+  if (user == null) {
+    throw const ServerException('Sign up returned no user');
+  }
 
   // Supabase quirk (confirm-email ON): إيميل متسجّل ومؤكّد قبل كده بيرجّع
   // user بـ identities فاضية، من غير error ومن غير ما يبعت إيميل. بنمسكها
   // بره الـ try عشان handleError ميعملهاش re-wrap لـ ServerException.
-  if (user == null || (user.identities?.isEmpty ?? true)) {
+  // ومع التأكيد المقفول Supabase بيرمي خطأ صريح، فالتشييك مالوش لازمة.
+  if (AppFlags.requireEmailConfirmation && (user.identities?.isEmpty ?? true)) {
     throw const AuthFailureException('This email is already registered');
   }
 
-  // session == null هنا حالة متوقعة — المستخدم لازم يأكّد من لينك الإيميل.
-  // مفيش _buildFromProfile: مفيش session، وقراءة profiles محتاجة authenticated.
+  // مع التأكيد المفتوح، session == null حالة متوقعة والمستخدم بيكمّل من لينك
+  // الإيميل. ومع المقفول، الـ signUp بيرجّع session والـ auth stream بيلقفها.
+  // مفيش _buildFromProfile هنا في الحالتين — الشغل ده بتاع الـ AuthCubit.
 }
   @override
   Future<UserModel> login({
