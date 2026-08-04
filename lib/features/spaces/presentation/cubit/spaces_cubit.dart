@@ -54,6 +54,9 @@ class SpacesCubit extends Cubit<SpacesState> {
     emit(const CreateSpaceLoading());
     try {
       final space = await _createSpace(name: name);
+      // you land inside the space you just made, so the refresh below picks
+      // it up instead of whatever was selected before.
+      await _prefs.setSelectedSpaceId(space.id);
       emit(CreateSpaceSuccess(space));
       await getMySpaces();
     } on AppException catch (e) {
@@ -64,7 +67,8 @@ class SpacesCubit extends Cubit<SpacesState> {
   Future<void> joinByCode(String inviteCode) async {
     emit(const JoinSpaceLoading());
     try {
-      await _joinByCode(inviteCode: inviteCode);
+      final space = await _joinByCode(inviteCode: inviteCode);
+      await _prefs.setSelectedSpaceId(space.id);
       emit(const JoinSpaceSuccess());
       await getMySpaces(); // refresh the list from the server
     } on AppException catch (e) {

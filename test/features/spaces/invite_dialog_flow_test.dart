@@ -15,8 +15,14 @@ import 'package:team_space/features/spaces/domain/usecases/join_by_code.dart';
 import 'package:team_space/features/spaces/presentation/cubit/spaces_cubit.dart';
 import 'package:team_space/features/spaces/presentation/ui/widgets/invite_dialog.dart';
 
+const _oldSpace = Space(
+  id: 'space-old',
+  name: 'مساحة قديمة',
+  inviteCode: 'aaaa1111',
+);
+
 const _createdSpace = Space(
-  id: 'space-1',
+  id: 'space-new',
   name: 'فريق التصميم',
   inviteCode: '733c1abf',
 );
@@ -26,17 +32,20 @@ class _FakeSpacesRepository implements SpacesRepository {
   Future<Space> createSpace({required String name}) async => _createdSpace;
 
   @override
-  Future<List<Space>> getMySpaces() async => [_createdSpace];
-
-  @override
   Future<Space> joinByCode({required String inviteCode}) async => _createdSpace;
+
+  // the newly created space is not first on purpose: picking it must come
+  // from the saved selection, never from the list order.
+  @override
+  Future<List<Space>> getMySpaces() async => [_oldSpace, _createdSpace];
 }
 
 void main() {
   late SpacesCubit cubit;
 
   setUp(() async {
-    SharedPreferences.setMockInitialValues({});
+    // the user is currently sitting inside the old space
+    SharedPreferences.setMockInitialValues({'selected_space_id': _oldSpace.id});
     final repository = _FakeSpacesRepository();
     cubit = SpacesCubit(
       getMySpaces: GetMySpaces(repository),
@@ -85,6 +94,11 @@ void main() {
 
   testWidgets('creating a space closes its dialog and opens the invite dialog',
       (tester) async {
+    // a phone-sized surface, otherwise ScreenUtil scales against 800x600
+    tester.view.physicalSize = const Size(1125, 2436);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+
     await EasyLocalization.ensureInitialized();
 
     await tester.pumpWidget(testApp());
@@ -94,7 +108,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(SpaceActionDialog), findsOneWidget);
 
-    await tester.enterText(find.byType(TextField), 'فريق التصميم');
+    await tester.enterText(find.byType(TextField), _createdSpace.name);
     await tester.tap(find.text(tr('spaces.create.confirm')));
     await tester.pumpAndSettle();
 
@@ -105,5 +119,21 @@ void main() {
     // and it shows the code of the space that was just created
     expect(find.text(_createdSpace.inviteCode), findsOneWidget);
     expect(find.text(tr('spaces.invite.title')), findsOneWidget);
+  });
+
+  test('a created space becomes the selected one', () async {
+    await cubit.createSpace(_createdSpace.name);
+
+    final state = cubit.state;
+    expect(state, isA<SpacesLoaded>());
+    expect((state as SpacesLoaded).selectedSpace, _createdSpace);
+  });
+
+  test('a joined space becomes the selected one', () async {
+    await cubit.joinByCode(_createdSpace.inviteCode);
+
+    final state = cubit.state;
+    expect(state, isA<SpacesLoaded>());
+    expect((state as SpacesLoaded).selectedSpace, _createdSpace);
   });
 }

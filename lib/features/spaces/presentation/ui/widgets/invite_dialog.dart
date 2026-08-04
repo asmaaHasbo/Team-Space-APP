@@ -48,7 +48,8 @@ class InviteDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.large.r),
       ),
-      child: Padding(
+      // scrollable so a small screen or a large text scale never overflows
+      child: SingleChildScrollView(
         padding: EdgeInsets.all(20.w),
         child: Column(
           mainAxisSize: MainAxisSize.min,

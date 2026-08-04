@@ -19,6 +19,12 @@ class SpaceSwitcherDialog extends StatelessWidget {
     required this.selectedSpace,
   });
 
+  /// The space you are inside sits on top; the rest keep their original order.
+  List<Space> get _orderedSpaces => [
+        selectedSpace,
+        ...spaces.where((space) => space.id != selectedSpace.id),
+      ];
+
   /// Re-selecting the current space would rebuild the whole shell for nothing.
   void _onSpaceTap(BuildContext context, Space space) {
     if (space.id != selectedSpace.id) {
@@ -50,10 +56,10 @@ class SpaceSwitcherDialog extends StatelessWidget {
           child: ListView.separated(
             shrinkWrap: true,
             padding: EdgeInsets.zero,
-            itemCount: spaces.length,
+            itemCount: _orderedSpaces.length,
             separatorBuilder: (context, index) => SizedBox(height: 8.h),
             itemBuilder: (context, index) {
-              final space = spaces[index];
+              final space = _orderedSpaces[index];
               return SpaceSwitcherTile(
                 space: space,
                 isSelected: space.id == selectedSpace.id,
