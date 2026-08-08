@@ -42,24 +42,24 @@ class SpacesRemoteDataSourceImpl implements SpacesRemoteDataSource {
       return handleError(e);
     }
   }
-Future<SpaceModel> joinByCode({required String inviteCode}) async {
-  final Map<String, dynamic>? spaceRow;
 
-  try {
-    spaceRow = await _client.rpc(
-      'join_space_by_code',
-      params: {'p_invite_code': inviteCode},
-    );
-  } catch (e) {
-    return handleError(e);
+  @override
+  Future<SpaceModel> joinByCode({required String inviteCode}) async {
+    final Map<String, dynamic>? spaceRow;
+
+    try {
+      spaceRow = await _client.rpc(
+        'join_space_by_code',
+        params: {'p_invite_code': inviteCode},
+      );
+    } catch (e) {
+      return handleError(e);
+    }
+
+    if (spaceRow == null) {
+      throw AuthFailureException('Invalid invite code');
+    }
+
+    return SpaceModel.fromJson(spaceRow);
   }
-
-  if (spaceRow == null) {
-    throw AuthFailureException('Invalid invite code');
-  }
-
-  return SpaceModel.fromJson(spaceRow);
-}
-
-
 }

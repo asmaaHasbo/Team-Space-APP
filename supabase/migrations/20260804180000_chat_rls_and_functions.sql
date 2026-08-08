@@ -137,3 +137,55 @@ begin
   return target_space;
 end;
 $$;
+
+create or replace function public.get_or_create_direct_chat(
+  p_space_id uuid,
+  p_other_user_id uuid
+)
+returns uuid
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_dm_key text;
+  v_chat_id uuid;
+begin
+  if not public.is_space_member(p_space_id) then
+    raise exception 'not a member of this space';
+  end if;
+
+  if not exists (
+    select 1 from space_members
+    where space_id = p_space_id and user_id = p_other_user_id
+  ) then
+    raise exception 'the other user is not a member of this space';
+  end if;
+
+  if p_other_user_id = auth.uid() then
+    raise exception 'cannot create a chat with yourself';
+  end if;
+
+  v_dm_key := p_space_id::text || '_' ||
+              least(auth.uid()::text, p_other_user_id::text)
+              || '_' ||
+              greatest(auth.uid()::text, p_other_user_id::text);
+
+  select id into v_chat_id
+  from chats
+  where dm_key = v_dm_key;
+
+  if v_chat_id is not null then
+    return v_chat_id;
+  end if;
+
+  insert into chats (space_id, type, dm_key, created_by)
+  values (p_space_id, 'direct', v_dm_key, auth.uid())
+  returning id into v_chat_id;
+
+  insert into chat_members (chat_id, user_id)
+  values (v_chat_id, auth.uid()), (v_chat_id, p_other_user_id);
+
+  return v_chat_id;
+end;
+$$;
