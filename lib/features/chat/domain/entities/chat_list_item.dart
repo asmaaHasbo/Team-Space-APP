@@ -3,7 +3,7 @@ import 'package:team_space/features/chat/domain/entities/chat.dart';
 
 class ChatListItem extends Equatable {
   final Chat chat;
-  final String displayName;
+  final String? displayName;
   final String? avatarUrl;
   final String? lastMessage;
   final DateTime? lastMessageAt;
