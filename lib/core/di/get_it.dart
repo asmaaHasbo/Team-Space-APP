@@ -2,6 +2,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:team_space/core/helper/app_preferences.dart';
+import 'package:team_space/features/chat/data/datasources/chat_remote_data_source.dart';
+import 'package:team_space/features/chat/data/repositories/chat_repository_impl.dart';
+import 'package:team_space/features/chat/domain/repositories/chat_repository.dart';
+import 'package:team_space/features/chat/domain/usecases/get_my_chats.dart';
+import 'package:team_space/features/chat/presentation/cubit/chats_cubit.dart';
 import 'package:team_space/features/spaces/data/datasources/spaces_remote_data_source.dart';
 import 'package:team_space/features/spaces/data/repositories/spaces_repository_impl.dart';
 import 'package:team_space/features/spaces/domain/repositories/spaces_repository.dart';
@@ -84,5 +89,25 @@ Future<void> setupGetIt() async {
       joinByCode: getIt<JoinByCode>(),
       prefs: getIt<AppPreferences>(),
     ),
+  );
+
+  //==================== chats ====================
+  //data source
+  getIt.registerLazySingleton<ChatRemoteDataSource>(
+    () => ChatRemoteDataSourceImpl(getIt<SupabaseClient>()),
+  );
+
+  // repository
+  getIt.registerLazySingleton<ChatRepository>(
+    () => ChatRepositoryImpl(getIt<ChatRemoteDataSource>()),
+  );
+
+  // usecases
+  getIt.registerLazySingleton(() => GetMyChats(getIt<ChatRepository>()));
+  
+
+  // cubit
+  getIt.registerFactory<ChatsCubit>(
+    () => ChatsCubit(getMyChats: getIt<GetMyChats>()),
   );
 }
