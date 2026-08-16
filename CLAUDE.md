@@ -76,7 +76,8 @@ feature/ui/
 
 ## UI Rules
 - Images: `CachedNetworkImage` + `ImageShimmer` — never `Image.network`
-- Loading: `redacted` package — wrap real widget, nullable model, no dummy data
+- Loading: `redacted` package — real widget + one sample model, wrapped `.redactedHelper(context: context, isLoading: true)`
+- Sample model lives in the loading widget file only — never nullable fields or placeholder text on the real widget
 - `ImageShimmer` for image loading — never redacted on images
 - Check `core/` before creating shared code — common components → `presentation/shared/`
 

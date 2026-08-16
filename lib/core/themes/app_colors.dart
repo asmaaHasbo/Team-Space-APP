@@ -29,4 +29,19 @@ class AppColors {
   static const Color error = Color(0xFFD64545);
   static const Color warning = Color(0xFFE1A52D);
   static const Color info = Color(0xFF3A6BA5);
+
+  /// Avatar tints — the same name always lands on the same pair, so a chat
+  /// keeps its color between sessions.
+  static const List<({Color background, Color foreground})> avatarTints = [
+    (background: Color(0xFFE7EEF6), foreground: Color(0xFF0C447C)), // blue
+    (background: Color(0xFFE6F4EA), foreground: Color(0xFF2E9E5B)), // green
+    (background: Color(0xFFFBE9EC), foreground: Color(0xFFC2415C)), // rose
+    (background: Color(0xFFFCF2E0), foreground: Color(0xFFB07A12)), // amber
+    (background: Color(0xFFEDE9FA), foreground: Color(0xFF6B4FBB)), // purple
+    (background: Color(0xFFE0F2F0), foreground: Color(0xFF11796B)), // teal
+    (background: Color(0xFFFCEBE1), foreground: Color(0xFFC0561F)), // orange
+    (background: Color(0xFFE2F1FB), foreground: Color(0xFF1B7FB8)), // sky
+    (background: Color(0xFFF0EAE4), foreground: Color(0xFF7B5E45)), // brown
+    (background: Color(0xFFF9E8F4), foreground: Color(0xFFA33C8E)), // plum
+  ];
 }

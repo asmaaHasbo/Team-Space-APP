@@ -11,14 +11,55 @@ class ChatsCubit extends Cubit<ChatsState> {
 
   final GetMyChats _getMyChats;
 
-  
+  // the durable list — search filters a copy of it, never the source
+  List<ChatListItem> _chats = [];
+  String _query = '';
+  String? _spaceId;
+
+  /// First load for a space, and the reload after the user switches space.
   Future<void> loadMyChats(String spaceId) async {
+    _spaceId = spaceId;
+    _query = '';
     emit(const ChatsLoading());
+    await _fetch();
+  }
+
+  /// Pull to refresh — no loading state, the indicator is enough.
+  Future<void> refresh() => _fetch();
+
+  void search(String query) {
+    _query = query;
+    // a search typed while the list is still loading or failed has nothing to
+    // filter yet — it gets applied by the next successful fetch.
+    if (state is! ChatsLoaded) return;
+    _emitList();
+  }
+
+  void clearSearch() => search('');
+
+  Future<void> _fetch() async {
+    final spaceId = _spaceId;
+    if (spaceId == null) return;
+
     try {
-      final List<ChatListItem> chats = await _getMyChats(spaceId);
-      emit(ChatsLoaded(chats));
+      _chats = await _getMyChats(spaceId);
+      _emitList();
     } on AppException catch (e) {
       emit(ChatsError(e.message));
     }
+  }
+
+  void _emitList() {
+    final query = _query.trim().toLowerCase();
+    final visible = query.isEmpty
+        ? _chats
+        : _chats
+              .where(
+                (item) =>
+                    (item.displayName ?? '').toLowerCase().contains(query),
+              )
+              .toList();
+
+    emit(ChatsLoaded(visible, query: _query));
   }
 }

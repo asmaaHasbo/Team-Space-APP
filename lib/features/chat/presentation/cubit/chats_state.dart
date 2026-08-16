@@ -16,11 +16,15 @@ final class ChatsLoading extends ChatsState {
 }
 
 final class ChatsLoaded extends ChatsState {
+  /// What the list shows right now — already filtered by [query].
+  /// Empty only when a search matched nothing; every space keeps its default chat.
   final List<ChatListItem> chats;
-  const ChatsLoaded(this.chats);
+  final String query;
+
+  const ChatsLoaded(this.chats, {this.query = ''});
 
   @override
-  List<Object?> get props => [chats];
+  List<Object?> get props => [chats, query];
 }
 
 final class ChatsError extends ChatsState {
