@@ -41,7 +41,9 @@ class _ChatsBodyState extends State<ChatsBody> {
       },
       child: BlocBuilder<ChatsCubit, ChatsState>(
         builder: (context, state) => switch (state) {
-          ChatsLoaded(:final chats) when chats.isEmpty => const ChatsNoResults(),
+          ChatsLoaded(:final chats, :final query)
+              when chats.isEmpty && query.isNotEmpty =>
+            const ChatsNoResults(),
           ChatsLoaded(:final chats) => ChatsListView(chats: chats),
           ChatsError(:final message) => ChatsErrorView(message: message),
           ChatsInitial() || ChatsLoading() => const ChatsLoadingList(),

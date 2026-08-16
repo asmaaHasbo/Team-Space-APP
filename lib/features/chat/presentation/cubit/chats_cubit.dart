@@ -42,9 +42,12 @@ class ChatsCubit extends Cubit<ChatsState> {
     if (spaceId == null) return;
 
     try {
-      _chats = await _getMyChats(spaceId);
+      final result = await _getMyChats(spaceId);
+      if (spaceId != _spaceId) return;
+      _chats = result;
       _emitList();
     } on AppException catch (e) {
+      if (spaceId != _spaceId) return;
       emit(ChatsError(e.message));
     }
   }
