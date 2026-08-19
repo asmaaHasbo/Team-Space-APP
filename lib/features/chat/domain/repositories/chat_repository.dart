@@ -2,11 +2,15 @@ import 'package:team_space/features/chat/domain/entities/chat_list_item.dart';
 import 'package:team_space/features/chat/domain/entities/message.dart';
 
 abstract class ChatRepository {
-  Future<List<ChatListItem>> getMyChats(String spaceId);
+  Future<List<ChatListItem>> getMyChats({required String spaceId});
 
-  Future<List<Message>> getMessages(String chatId);
-
-  Stream<Message> watchMessages(String chatId);
+  Future<List<Message>> getMessages({
+    required String chatId,
+    int limit = 30,
+    DateTime? beforeSentAt,
+    String? beforeId,
+  });
+  Stream<Message> watchMessages({required String chatId});
 
   Future<Message> sendMessage({
     required String messageId,

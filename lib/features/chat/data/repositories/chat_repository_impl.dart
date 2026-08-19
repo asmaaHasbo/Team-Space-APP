@@ -7,14 +7,24 @@ class ChatRepositoryImpl implements ChatRepository {
   final ChatRemoteDataSource _remoteDataSource;
   ChatRepositoryImpl(this._remoteDataSource);
   @override
-  Future<List<ChatListItem>> getMyChats(String spaceId) {
+  Future<List<ChatListItem>> getMyChats({required String spaceId}) {
     return _remoteDataSource.getMyChats(spaceId: spaceId);
   }
 
+
   @override
-  Future<List<Message>> getMessages(String chatId) {
-    // TODO: implement getMessages
-    throw UnimplementedError();
+  Future<List<Message>> getMessages({
+    required String chatId,
+    int limit = 30,
+    DateTime? beforeSentAt,
+    String? beforeId,
+  }) {
+    return _remoteDataSource.getMessages(
+      chatId: chatId,
+      limit: limit,
+      beforeSentAt: beforeSentAt,
+      beforeId: beforeId,
+    );
   }
 
   @override
@@ -22,13 +32,17 @@ class ChatRepositoryImpl implements ChatRepository {
     required String messageId,
     required String chatId,
     required String content,
+    
   }) {
-    // TODO: implement sendMessage
-    throw UnimplementedError();
+    return _remoteDataSource.sendMessage(
+      messageId: messageId,
+      chatId: chatId,
+      content: content,
+    );
   }
 
   @override
-  Stream<Message> watchMessages(String chatId) {
+  Stream<Message> watchMessages({required String chatId}) {
     // TODO: implement watchMessages
     throw UnimplementedError();
   }

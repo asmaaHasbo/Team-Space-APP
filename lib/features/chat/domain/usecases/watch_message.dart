@@ -7,6 +7,6 @@ class WatchMessage {
   WatchMessage(this.repository);
 
   Stream<Message> call(String chatId) {
-    return repository.watchMessages(chatId);
+    return repository.watchMessages(chatId : chatId);
   }
 }

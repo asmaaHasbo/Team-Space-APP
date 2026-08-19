@@ -7,6 +7,6 @@ class GetMyChats {
   GetMyChats(this.repository);
 
   Future<List<ChatListItem>> call(String spaceId) {
-    return repository.getMyChats(spaceId);
+    return repository.getMyChats(spaceId: spaceId);
   }
 }
