@@ -76,8 +76,9 @@ feature/ui/
 
 ## UI Rules
 - Images: `CachedNetworkImage` + `ImageShimmer` — never `Image.network`
-- Loading: `redacted` package — real widget + one sample model, wrapped `.redactedHelper(context: context, isLoading: true)`
-- Sample model lives in the loading widget file only — never nullable fields or placeholder text on the real widget
+- Loading: `redacted` package — feed the **real widget** a small sample model, wrap the result in `.redactedHelper(context: context, isLoading: true)`. Never a hand-drawn separate skeleton widget (drifts out of sync with the real layout)
+- Sample model is a `static final` defined in the loading widget file only (e.g. `chats_loading_list.dart`) — never in the real widget's file, never nullable fields or `?? ''` placeholder branches inside the real widget itself
+- Sample field values only need roughly-realistic length, not real wording — `redacted` masks the paint step itself (glyphs never reach the screen), so exact text is irrelevant
 - `ImageShimmer` for image loading — never redacted on images
 - Check `core/` before creating shared code — common components → `presentation/shared/`
 
