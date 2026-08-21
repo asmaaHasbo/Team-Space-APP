@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:team_space/features/chat/data/models/message_model.dart';
 
@@ -18,8 +20,9 @@ abstract interface class ChatRemoteDataSource {
     required String messageId,
     required String chatId,
     required String content,
-    
   });
+
+  Stream<MessageModel> watchMessages({required String chatId});
 }
 
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
@@ -107,4 +110,77 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       return handleError(e);
     }
   }
+/*
+watchMessages في ٥ نقط:
+
+صندوق — StreamController نحط فيه الرسايل الجاية
+خط — channel مع السيرفر، مخصوص للشات ده
+شرط — بلّغني بس لما تتضاف رسالة (insert) في الشات ده (filter)
+الجرس — لما يبلّغنا: حوّل الصف لـ MessageModel وحطه في الصندوق (add)
+القفل — لما المستخدم يخرج، اقفل الخط والصندوق (onCancel)
+*/
+  //
+  //بتفتح خط مباشر بين السيرفر والشاشة، عشان أي رسالة جديدة تظهر فورًا من غير ما نطلبها.
+  @override
+  Stream<MessageModel> watchMessages({required String chatId}) {
+    //صندوق فاضي. أي حاجة تتحط فيه، اللي مستني بره بياخدها فورًا
+    final controller = StreamController<MessageModel>();
+
+    //بنشترك في قناة معينة على السيرفر، القناة دي مخصوصة للشات ده
+    //خط مخصوص للشات ده لوحده. الاسم فيه الـ chatId عشان كل شات يبقى له خطه.
+    final channel = _supabase.channel('messages:$chatId');
+
+    channel
+        .onPostgresChanges(
+          //٣. بنقول للسيرفر: بلّغني بإيه بالظبط
+          event: PostgresChangeEvent.insert, // أي رسالة جديدة تتحط في الجدول ده
+          schema: 'public',
+          table: 'messages',
+          //٤. بنعمل فلتر على الرسائل اللي جايه، عشان بس اللي ليها chatId ده
+          //يعني: "مش عايز أعرف كل حاجة، عايز أعرف بس لما تتكتب رسالة جديدة في الشات ده."
+          filter: PostgresChangeFilter(
+            type: PostgresChangeFilterType.eq,
+            column: 'chat_id',
+            value: chatId,
+          ),
+          //٤. بنقوله: ولما تبلغني، اعمل كده
+          callback: (payload) {
+            //السيرفر بيبعتلنا الصف الجديد خام (payload.newRecord)
+            //بنحوله لنموذج رسالة (MessageModel) عشان نقدر نتعامل معاه بسهولة
+            final message = MessageModel.fromJson(payload.newRecord);
+            //٥. وبعدين نحطه في الصندوق (controller) عشان أي حد مستني بره ياخده فورًا
+            controller.add(message);
+          },
+        )
+        .subscribe(); //٢. بنشترك في القناة دي، عشان نسمع أي حاجة جديدة فيها
+
+    controller.onCancel = () async {
+      await _supabase.removeChannel(
+        channel,
+      ); //٦. لما حد يخلص من الاستماع، بنقفل القناة دي عشان ما نسمعش حاجة تاني
+      await controller
+          .close(); // ٧. وبنقفل الصندوق (controller) عشان ما نضيفش حاجة فيه تاني
+    };
+    //٨. وبنرجع الصندوق (controller.stream) عشان أي حد يقدر يستمع لأي رسالة جديدة تتحط فيه
+    return controller.stream;
+  }
+
+  /* 
+  زميلك بعت رسالة
+      ↓
+اتكتبت في جدول messages
+      ↓
+Supabase شاف الـ insert، وبص لقى فيه حد مشترك في الشات ده
+      ↓
+نده الـ callback عندنا ومعاه الصف
+      ↓
+حوّلناه MessageModel وحطيناه في الصندوق (add)
+      ↓
+الـ Cubit اللي مستني على الصندوق استلم
+      ↓
+ضافها آخر الليستة
+      ↓
+ظهرت على الشاشة تحت خالص
+  
+   */
 }
