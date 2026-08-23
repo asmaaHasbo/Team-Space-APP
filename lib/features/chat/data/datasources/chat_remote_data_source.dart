@@ -110,7 +110,8 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       return handleError(e);
     }
   }
-/*
+
+  /*
 watchMessages في ٥ نقط:
 
 صندوق — StreamController نحط فيه الرسايل الجاية
@@ -119,7 +120,6 @@ watchMessages في ٥ نقط:
 الجرس — لما يبلّغنا: حوّل الصف لـ MessageModel وحطه في الصندوق (add)
 القفل — لما المستخدم يخرج، اقفل الخط والصندوق (onCancel)
 */
-  //
   //بتفتح خط مباشر بين السيرفر والشاشة، عشان أي رسالة جديدة تظهر فورًا من غير ما نطلبها.
   @override
   Stream<MessageModel> watchMessages({required String chatId}) {
@@ -164,23 +164,6 @@ watchMessages في ٥ نقط:
     //٨. وبنرجع الصندوق (controller.stream) عشان أي حد يقدر يستمع لأي رسالة جديدة تتحط فيه
     return controller.stream;
   }
-
-  /* 
-  زميلك بعت رسالة
-      ↓
-اتكتبت في جدول messages
-      ↓
-Supabase شاف الـ insert، وبص لقى فيه حد مشترك في الشات ده
-      ↓
-نده الـ callback عندنا ومعاه الصف
-      ↓
-حوّلناه MessageModel وحطيناه في الصندوق (add)
-      ↓
-الـ Cubit اللي مستني على الصندوق استلم
-      ↓
-ضافها آخر الليستة
-      ↓
-ظهرت على الشاشة تحت خالص
-  
-   */
 }
+
+

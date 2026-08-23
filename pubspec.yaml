@@ -52,6 +52,7 @@ dependencies:
   share_plus: ^10.1.4
   flutter_localizations:
     sdk: flutter
+  uuid: ^4.6.0
 
 dev_dependencies:
   flutter_test:

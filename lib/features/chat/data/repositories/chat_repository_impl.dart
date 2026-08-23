@@ -11,7 +11,6 @@ class ChatRepositoryImpl implements ChatRepository {
     return _remoteDataSource.getMyChats(spaceId: spaceId);
   }
 
-
   @override
   Future<List<Message>> getMessages({
     required String chatId,
@@ -32,7 +31,6 @@ class ChatRepositoryImpl implements ChatRepository {
     required String messageId,
     required String chatId,
     required String content,
-    
   }) {
     return _remoteDataSource.sendMessage(
       messageId: messageId,
@@ -43,7 +41,6 @@ class ChatRepositoryImpl implements ChatRepository {
 
   @override
   Stream<Message> watchMessages({required String chatId}) {
-    // TODO: implement watchMessages
-    throw UnimplementedError();
+    return _remoteDataSource.watchMessages(chatId: chatId);
   }
 }

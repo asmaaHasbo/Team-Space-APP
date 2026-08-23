@@ -5,8 +5,12 @@ import 'package:team_space/core/helper/app_preferences.dart';
 import 'package:team_space/features/chat/data/datasources/chat_remote_data_source.dart';
 import 'package:team_space/features/chat/data/repositories/chat_repository_impl.dart';
 import 'package:team_space/features/chat/domain/repositories/chat_repository.dart';
+import 'package:team_space/features/chat/domain/usecases/get_messages.dart';
 import 'package:team_space/features/chat/domain/usecases/get_my_chats.dart';
+import 'package:team_space/features/chat/domain/usecases/send_message.dart';
+import 'package:team_space/features/chat/domain/usecases/watch_message.dart';
 import 'package:team_space/features/chat/presentation/cubit/chats_cubit.dart';
+import 'package:team_space/features/chat/presentation/cubit/messages/messages_cubit.dart';
 import 'package:team_space/features/spaces/data/datasources/spaces_remote_data_source.dart';
 import 'package:team_space/features/spaces/data/repositories/spaces_repository_impl.dart';
 import 'package:team_space/features/spaces/domain/repositories/spaces_repository.dart';
@@ -31,10 +35,9 @@ final getIt = GetIt.instance;
 
 /// بتتنادى مرة واحدة في الـ main بعد `Supabase.initialize`
 Future<void> setupGetIt() async {
-  
   final prefs = await SharedPreferences.getInstance();
   getIt.registerLazySingleton(() => AppPreferences(prefs));
- 
+
   //==================== external ====================
   getIt.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
 
@@ -104,10 +107,21 @@ Future<void> setupGetIt() async {
 
   // usecases
   getIt.registerLazySingleton(() => GetMyChats(getIt<ChatRepository>()));
-  
+  getIt.registerLazySingleton(() => GetMessages(getIt<ChatRepository>()));
+  getIt.registerLazySingleton(() => WatchMessages(getIt<ChatRepository>()));
+  getIt.registerLazySingleton(() => SendMessage(getIt<ChatRepository>()));
 
   // cubit
   getIt.registerFactory<ChatsCubit>(
     () => ChatsCubit(getMyChats: getIt<GetMyChats>()),
+  );
+
+  getIt.registerFactoryParam<MessagesCubit, String, void>(
+    (chatId, _) => MessagesCubit(
+      getMessages: getIt(),
+      sendMessage: getIt(),
+      watchMessages: getIt(),
+      chatId: chatId,
+    ),
   );
 }
