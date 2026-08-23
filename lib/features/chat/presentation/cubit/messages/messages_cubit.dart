@@ -66,7 +66,7 @@ class MessagesCubit extends Cubit<MessagesState> {
           messages: [...messages.reversed, ...currentState.messages],
 
           // لو عدد الرسائل اللي رجعت أقل من 30 يبقى وصلنا لنهاية الرسائل
-          hasReachedEnd: messages.length < 30,
+          hasReachedEnd: messages.length < GetMessages.pageSize,
           isLoadingMore: false,
         ),
       );

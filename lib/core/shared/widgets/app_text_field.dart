@@ -18,6 +18,10 @@ class AppTextField extends StatelessWidget {
   final Widget? prefixIcon;
   final int? maxLength;
   final int? maxLines;
+
+  /// Pair with [maxLines] to let a multiline field grow instead of opening
+  /// at its full height.
+  final int? minLines;
   final FocusNode? focusNode;
   final ValueChanged<String>? onChanged;
   final Color? fillColor;
@@ -39,6 +43,7 @@ class AppTextField extends StatelessWidget {
     this.prefixIcon,
     this.maxLength,
     this.maxLines,
+    this.minLines,
     this.focusNode,
     this.onChanged,
     this.fillColor,
@@ -61,6 +66,7 @@ class AppTextField extends StatelessWidget {
             obscureText: obscureText,
             keyboardType: keyboardType,
             maxLines: maxLines ?? 1,
+            minLines: minLines,
             maxLength: maxLength,
             onChanged: onChanged,
             autovalidateMode: AutovalidateMode.onUserInteraction,

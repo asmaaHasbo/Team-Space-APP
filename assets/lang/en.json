@@ -235,6 +235,7 @@
   "chats.default": "Default",
   "chats.noMessages": "No messages yet",
   "chats.search": "Search chats",
+  "chats.typeMessage": "Type a message...",
   "chats.yesterday": "Yesterday",
   "clear": "Clear",
   "code_sent_to_email": "Activation code sent via E-mail",

@@ -1,10 +1,9 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:team_space/core/shared/widgets/setup_snack_bar_for_success_state.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/features/chat/domain/entities/chat_list_item.dart';
 import 'package:team_space/features/chat/presentation/cubit/chats_cubit.dart';
+import 'package:team_space/features/chat/presentation/ui/screens/messages_screen.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/chat_list_divider.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/chat_list_tile.dart';
 
@@ -27,9 +26,21 @@ class ChatsListView extends StatelessWidget {
           separatorBuilder: (_, _) => const ChatListDivider(),
           itemBuilder: (_, index) => ChatListTile(
             item: chats[index],
+
             // the chat room screen is not built yet
-            onTap: () =>
-                setupSnackBarForSuccessState(context, context.tr('Coming soon')),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => MessagesScreen(
+                    chatId: chats[index].chat.id,
+                    displayName: chats[index].displayName,
+                    chatType: chats[index].chat.type,
+                    isDefault: chats[index].chat.isDefault,
+                    avatarUrl: chats[index].avatarUrl,
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),

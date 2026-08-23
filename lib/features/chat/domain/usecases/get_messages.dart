@@ -5,9 +5,12 @@ class GetMessages {
 
   GetMessages(this.repository);
 
+  /// Shared with the cubit so "a short page means we hit the end" stays true.
+  static const int pageSize = 30;
+
   Future<List<Message>> call({
     required String chatId,
-    int limit = 30,
+    int limit = pageSize,
     DateTime? beforeSentAt,
     String? beforeId,
   }) {
