@@ -43,4 +43,15 @@ class ChatRepositoryImpl implements ChatRepository {
   Stream<Message> watchMessages({required String chatId}) {
     return _remoteDataSource.watchMessages(chatId: chatId);
   }
+
+  @override
+  Future<String> getOrCreateDirectChat({
+    required String spaceId,
+    required String otherUserId,
+  }) {
+    return _remoteDataSource.getOrCreateDirectChat(
+      spaceId: spaceId,
+      otherUserId: otherUserId,
+    );
+  }
 }

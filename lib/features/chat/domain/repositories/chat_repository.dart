@@ -17,4 +17,9 @@ abstract class ChatRepository {
     required String chatId,
     required String content,
   });
+
+  Future<String> getOrCreateDirectChat({
+    required String spaceId,
+    required String otherUserId,
+  });
 }

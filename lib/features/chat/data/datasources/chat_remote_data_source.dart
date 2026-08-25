@@ -23,6 +23,11 @@ abstract interface class ChatRemoteDataSource {
   });
 
   Stream<MessageModel> watchMessages({required String chatId});
+
+  Future<String> getOrCreateDirectChat({
+    required String spaceId,
+    required String otherUserId,
+  });
 }
 
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
@@ -30,6 +35,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
   ChatRemoteDataSourceImpl(this._supabase);
 
+  //================================= get my chats =========================================
   @override
   Future<List<ChatListItemModel>> getMyChats({required String spaceId}) async {
     try {
@@ -49,6 +55,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     }
   }
 
+  //============================== get messages ============================================
   @override
   Future<List<MessageModel>> getMessages({
     required String chatId,
@@ -88,6 +95,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     }
   }
 
+  //============================== send message ===========================================
   @override
   Future<MessageModel> sendMessage({
     required String messageId,
@@ -111,6 +119,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     }
   }
 
+  //============================== watch messages ==========================================
   /*
 watchMessages في ٥ نقط:
 
@@ -164,6 +173,24 @@ watchMessages في ٥ نقط:
     //٨. وبنرجع الصندوق (controller.stream) عشان أي حد يقدر يستمع لأي رسالة جديدة تتحط فيه
     return controller.stream;
   }
+
+  //============================== get or create direct chat ================================
+  @override
+  Future<String> getOrCreateDirectChat({
+    required String spaceId,
+    required String otherUserId,
+  }) async {
+    try {
+      final response =
+          await _supabase.rpc(
+                'get_or_create_direct_chat',
+                params: {'p_space_id': spaceId, 'p_other_user_id': otherUserId},
+              )
+              as String;
+
+      return response;
+    } catch (e) {
+      return handleError(e);
+    }
+  }
 }
-
-
