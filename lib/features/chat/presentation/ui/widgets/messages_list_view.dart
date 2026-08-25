@@ -58,7 +58,7 @@ class _MessagesListViewState extends State<MessagesListView> {
     final reversedMessages = widget.messages.reversed.toList();
 
     return ColoredBox(
-      color: AppColors.background,
+      color: AppColors.chatBackground,
       child: ListView.builder(
         controller: _scrollController,
         reverse: true,

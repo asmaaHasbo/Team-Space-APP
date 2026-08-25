@@ -33,7 +33,7 @@ class _MessageInputFieldState extends State<MessageInputField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.surface,
+      color: AppColors.chatBackground,
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
       child: SafeArea(
         top: false,
@@ -44,6 +44,7 @@ class _MessageInputFieldState extends State<MessageInputField> {
               child: AppTextField(
                 controller: _controller,
                 hintText: context.tr('chats.typeMessage'),
+                fillColor: AppColors.white,
                 keyboardType: TextInputType.multiline,
                 minLines: 1,
                 maxLines: 5,

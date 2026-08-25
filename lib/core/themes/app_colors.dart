@@ -24,6 +24,12 @@ class AppColors {
 
   static const Color fieldFill = Color(0xFFF7F9FC);
 
+  /// Warm chat palette — the message field sits darkest so the white bubbles
+  /// lift off it, with the composer one shade lighter above it.
+  static const Color chatBackground = Color.fromARGB(255, 235, 228, 219);
+  static const Color chatSurface = Color(0xFFEFEAE3);
+  static const Color chatBubble = Color.fromARGB(255, 248, 245, 239);
+
   // Status
   static const Color success = Color(0xFF2E9E5B);
   static const Color error = Color(0xFFD64545);

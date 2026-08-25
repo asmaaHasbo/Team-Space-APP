@@ -31,7 +31,7 @@ class MessagesLoadingList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: AppColors.background,
+      color: AppColors.chatBackground,
       child: ListView.builder(
         physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),

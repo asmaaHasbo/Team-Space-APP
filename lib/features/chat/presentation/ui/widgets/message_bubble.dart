@@ -23,7 +23,7 @@ class MessageBubble extends StatelessWidget {
   /// `Opacity` wrapper — `redacted` only walks a fixed set of widget types,
   /// and anything else in the chain stops it before it reaches the text.
   Color get _bubbleColor {
-    if (!isMe) return AppColors.surface;
+    if (!isMe) return AppColors.chatBubble;
     return message.status == MessageStatus.pending
         ? AppColors.primaryLight
         : AppColors.primary;
@@ -40,7 +40,6 @@ class MessageBubble extends StatelessWidget {
         decoration: BoxDecoration(
           color: _bubbleColor,
           borderRadius: BorderRadius.circular(14.r),
-          border: isMe ? null : Border.all(color: AppColors.border),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

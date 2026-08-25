@@ -28,7 +28,7 @@ class MessagesScreen extends StatelessWidget {
     return BlocProvider<MessagesCubit>(
       create: (_) => getIt<MessagesCubit>(param1: chatId),
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColors.chatBackground,
         appBar: MessagesAppBar(
           displayName: displayName,
           chatType: chatType,

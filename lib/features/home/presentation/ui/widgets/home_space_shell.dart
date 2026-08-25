@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_space/features/chat/presentation/cubit/chats_cubit.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/chats_search_field.dart';
-import 'package:team_space/features/home/presentation/ui/widgets/space_action_dialog.dart';
+import 'package:team_space/features/home/presentation/ui/widgets/space_add_menu.dart';
 import 'package:team_space/features/home/presentation/ui/widgets/home_bottom_nav.dart';
 import 'package:team_space/features/home/presentation/ui/widgets/space_switcher_button.dart';
 import 'package:team_space/features/home/presentation/ui/widgets/tabs/chats_tab.dart';
@@ -59,12 +59,7 @@ class _HomeSpaceShellState extends State<HomeSpaceShell> {
                     icon: const Icon(Icons.search),
                     onPressed: _openSearch,
                   ),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    SpaceActionDialog.show(context, SpaceDialogMode.create);
-                  },
-                ),
+                const SpaceAddMenu(),
               ],
       ),
       body: IndexedStack(
