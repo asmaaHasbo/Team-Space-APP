@@ -6,6 +6,7 @@ class ChatListItemModel extends ChatListItem {
     required super.chat,
     super.displayName,
     super.avatarUrl,
+    super.otherUserId,
     super.lastMessage,
     super.lastMessageAt,
     super.unreadCount = 0,
@@ -16,6 +17,7 @@ class ChatListItemModel extends ChatListItem {
       chat: ChatModel.fromJson(json),
       displayName: json['display_name'] as String?,
       avatarUrl: json['avatar_url'] as String?,
+      otherUserId: json['other_user_id'] as String?,
       lastMessage: json['last_message'] as String?,
       lastMessageAt: json['last_message_at'] == null
           ? null

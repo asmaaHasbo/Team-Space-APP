@@ -6,12 +6,15 @@ class ChatListItem extends Equatable {
   final String? displayName;
   final String? avatarUrl;
   final String? lastMessage;
+  final String? otherUserId;
+
   final DateTime? lastMessageAt;
   final int unreadCount;
 
   const ChatListItem({
     required this.chat,
     required this.displayName,
+    this.otherUserId,
     this.avatarUrl,
     this.lastMessage,
     this.lastMessageAt,
@@ -20,11 +23,12 @@ class ChatListItem extends Equatable {
 
   @override
   List<Object?> get props => [
-        chat,
-        displayName,
-        avatarUrl,
-        lastMessage,
-        lastMessageAt,
-        unreadCount,
-      ];
+    chat,
+    displayName,
+    avatarUrl,
+    otherUserId,
+    lastMessage,
+    lastMessageAt,
+    unreadCount,
+  ];
 }

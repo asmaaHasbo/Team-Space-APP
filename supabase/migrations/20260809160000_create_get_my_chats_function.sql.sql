@@ -1,19 +1,9 @@
-create or replace function get_my_chats(p_space_id uuid)
-returns table (
-  id uuid,
-  type chat_type,
-  name text,
-  is_default boolean,
-  display_name text,
-  avatar_url text,
-  last_message text,
-  last_message_at timestamptz,
-  unread_count bigint
-)
-language sql
-security definer
-set search_path = public
-as $$
+CREATE OR REPLACE FUNCTION public.get_my_chats(p_space_id uuid)
+ RETURNS TABLE(id uuid, type chat_type, name text, is_default boolean, display_name text, avatar_url text, other_user_id uuid, last_message text, last_message_at timestamp with time zone, unread_count bigint)
+ LANGUAGE sql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
   SELECT
     c.id,
     c.type,
@@ -27,6 +17,7 @@ as $$
       WHEN c.type = 'direct' THEN p.avatar_url
       ELSE NULL
     END AS avatar_url,
+    other.user_id AS other_user_id,
     last_msg.message_content AS last_message,
     last_msg.created_at AS last_message_at,
     (
@@ -57,4 +48,4 @@ as $$
   WHERE c.space_id = p_space_id
     AND c.deleted_at IS NULL
   ORDER BY last_msg.created_at DESC NULLS LAST;
-$$;
+$function$
