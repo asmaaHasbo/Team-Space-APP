@@ -1,5 +1,6 @@
 import 'package:team_space/features/chat/domain/entities/chat_list_item.dart';
 import 'package:team_space/features/chat/domain/entities/message.dart';
+import 'package:team_space/features/chat/domain/entities/space_member.dart';
 
 abstract class ChatRepository {
   Future<List<ChatListItem>> getMyChats({required String spaceId});
@@ -22,4 +23,6 @@ abstract class ChatRepository {
     required String spaceId,
     required String otherUserId,
   });
+
+  Future<List<SpaceMember>> getSpaceMembers({required String spaceId});
 }

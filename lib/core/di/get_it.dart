@@ -30,6 +30,8 @@ import '../../features/auth/domain/usecases/watch_auth_state.dart';
 import '../../features/auth/presentation/cubit/auth/auth_cubit.dart';
 import '../../features/auth/presentation/cubit/login/login_cubit.dart';
 import '../../features/auth/presentation/cubit/register/register_cubit.dart';
+import '../../features/chat/domain/usecases/get_space_members.dart';
+import '../../features/chat/presentation/cubit/space_members_cubit/space_members_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -110,6 +112,7 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton(() => GetMessages(getIt<ChatRepository>()));
   getIt.registerLazySingleton(() => WatchMessages(getIt<ChatRepository>()));
   getIt.registerLazySingleton(() => SendMessage(getIt<ChatRepository>()));
+  getIt.registerLazySingleton(() => GetSpaceMembers(getIt<ChatRepository>()));
 
   // cubit
   getIt.registerFactory<ChatsCubit>(
@@ -123,5 +126,9 @@ Future<void> setupGetIt() async {
       watchMessages: getIt(),
       chatId: chatId,
     ),
+  );
+
+  getIt.registerFactory<SpaceMembersCubit>(
+    () => SpaceMembersCubit(getSpaceMembers: getIt<GetSpaceMembers>()),
   );
 }

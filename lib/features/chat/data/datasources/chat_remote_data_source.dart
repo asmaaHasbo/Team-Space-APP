@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:team_space/features/chat/data/models/message_model.dart';
+import 'package:team_space/features/chat/data/models/space_member_model.dart';
 
 import '../../../../core/error/handle_errors.dart';
 import '../models/chat_list_item_model.dart';
@@ -28,6 +29,8 @@ abstract interface class ChatRemoteDataSource {
     required String spaceId,
     required String otherUserId,
   });
+
+  Future<List<SpaceMemberModel>> getSpaceMembers({required String spaceId});
 }
 
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
@@ -189,6 +192,29 @@ watchMessages في ٥ نقط:
               as String;
 
       return response;
+    } catch (e) {
+      return handleError(e);
+    }
+  }
+
+  //======================== getSpaceMembers ==========================
+  @override
+  Future<List<SpaceMemberModel>> getSpaceMembers({
+    required String spaceId,
+  }) async {
+    try {
+      final response =
+          await _supabase.rpc(
+                'get_space_members',
+                params: {'p_space_id': spaceId},
+              )
+              as List;
+
+      return response
+          .map(
+            (json) => SpaceMemberModel.fromJson(json as Map<String, dynamic>),
+          )
+          .toList();
     } catch (e) {
       return handleError(e);
     }

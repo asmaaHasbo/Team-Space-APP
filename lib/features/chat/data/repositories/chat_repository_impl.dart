@@ -1,6 +1,7 @@
 import 'package:team_space/features/chat/data/datasources/chat_remote_data_source.dart';
 import 'package:team_space/features/chat/domain/entities/chat_list_item.dart';
 import 'package:team_space/features/chat/domain/entities/message.dart';
+import 'package:team_space/features/chat/domain/entities/space_member.dart';
 import 'package:team_space/features/chat/domain/repositories/chat_repository.dart';
 
 class ChatRepositoryImpl implements ChatRepository {
@@ -53,5 +54,10 @@ class ChatRepositoryImpl implements ChatRepository {
       spaceId: spaceId,
       otherUserId: otherUserId,
     );
+  }
+
+  @override
+  Future<List<SpaceMember>> getSpaceMembers({required String spaceId}) {
+    return _remoteDataSource.getSpaceMembers(spaceId: spaceId);
   }
 }
