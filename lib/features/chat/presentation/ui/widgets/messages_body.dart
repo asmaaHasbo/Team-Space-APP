@@ -14,7 +14,10 @@ import 'package:team_space/features/chat/presentation/ui/widgets/messages_loadin
 class MessagesBody extends StatefulWidget {
   final bool isGroup;
 
-  const MessagesBody({super.key, required this.isGroup});
+  /// Needed to open a direct chat with whoever wrote a bubble.
+  final String? spaceId;
+
+  const MessagesBody({super.key, required this.isGroup, this.spaceId});
 
   @override
   State<MessagesBody> createState() => _MessagesBodyState();
@@ -63,6 +66,7 @@ class _MessagesBodyState extends State<MessagesBody> {
                           MessagesListView(
                             messages: messages,
                             isGroup: widget.isGroup,
+                            spaceId: widget.spaceId,
                             membersById: membersById,
                             isLoadingMore: isLoadingMore,
                             hasReachedEnd: hasReachedEnd,

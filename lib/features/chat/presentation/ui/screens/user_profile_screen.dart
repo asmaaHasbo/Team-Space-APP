@@ -1,10 +1,10 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_space/core/di/get_it.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/core/themes/app_text_styles.dart';
 import 'package:team_space/features/chat/presentation/cubit/space_members_cubit/space_members_cubit.dart';
+import 'package:team_space/features/chat/presentation/helper/member_display_name.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/user_profile_body.dart';
 import 'package:team_space/features/spaces/presentation/cubit/spaces_cubit.dart';
 
@@ -29,10 +29,7 @@ class UserProfileScreen extends StatelessWidget {
         ? spacesState.selectedSpace
         : null;
 
-    final chatName = displayName;
-    final name = chatName == null || chatName.isEmpty
-        ? context.tr('Unknown')
-        : chatName;
+    final name = MemberDisplayName.of(context, displayName);
 
     return BlocProvider<SpaceMembersCubit>(
       create: (_) {

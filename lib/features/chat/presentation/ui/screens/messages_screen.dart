@@ -5,6 +5,9 @@ import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/features/chat/domain/entities/chat.dart';
 import 'package:team_space/features/chat/presentation/cubit/messages/messages_cubit.dart';
 import 'package:team_space/features/chat/presentation/cubit/space_members_cubit/space_members_cubit.dart';
+import 'package:team_space/features/chat/presentation/helper/member_display_name.dart';
+import 'package:team_space/features/chat/presentation/ui/screens/group_info_screen.dart';
+import 'package:team_space/features/chat/presentation/ui/screens/user_profile_screen.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/messages_app_bar.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/messages_body.dart';
 import 'package:team_space/features/spaces/presentation/cubit/spaces_cubit.dart';
@@ -27,6 +30,26 @@ class MessagesScreen extends StatelessWidget {
   final String? avatarUrl;
   final String? otherUserId;
 
+  /// The app bar leads behind the chat: a group opens its members, a direct
+  /// chat opens the person on the other side.
+  void _openDetails(BuildContext context, String spaceId) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => chatType == ChatType.group
+            ? GroupInfoScreen(
+                spaceId: spaceId,
+                groupName: MemberDisplayName.of(context, displayName),
+                isDefault: isDefault,
+              )
+            : UserProfileScreen(
+                displayName: displayName,
+                otherUserId: otherUserId,
+                avatarUrl: avatarUrl,
+              ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isGroup = chatType == ChatType.group;
@@ -34,6 +57,12 @@ class MessagesScreen extends StatelessWidget {
     final spaceId = spacesState is SpacesLoaded
         ? spacesState.selectedSpace.id
         : null;
+
+    // A direct chat opened before the chat list carried the other user's id has
+    // nothing to show on a profile, so its app bar simply stays inert.
+    final onTitleTap = spaceId == null || (!isGroup && otherUserId == null)
+        ? null
+        : () => _openDetails(context, spaceId);
 
     return MultiBlocProvider(
       providers: [
@@ -59,8 +88,9 @@ class MessagesScreen extends StatelessWidget {
           displayName: displayName,
           chatType: chatType,
           isDefault: isDefault,
+          onTap: onTitleTap,
         ),
-        body: MessagesBody(isGroup: isGroup),
+        body: MessagesBody(isGroup: isGroup, spaceId: spaceId),
       ),
     );
   }

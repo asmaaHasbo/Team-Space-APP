@@ -4,11 +4,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/features/chat/domain/entities/message.dart';
 import 'package:team_space/features/chat/domain/entities/space_member.dart';
+import 'package:team_space/features/chat/presentation/ui/widgets/member_bottom_sheet.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/message_bubble.dart';
 
 class MessagesListView extends StatefulWidget {
   final List<Message> messages;
   final bool isGroup;
+  final String? spaceId;
   final Map<String, SpaceMember> membersById;
   final bool isLoadingMore;
   final bool hasReachedEnd;
@@ -18,6 +20,7 @@ class MessagesListView extends StatefulWidget {
     super.key,
     required this.messages,
     required this.isGroup,
+    required this.spaceId,
     required this.membersById,
     required this.isLoadingMore,
     required this.hasReachedEnd,
@@ -57,6 +60,7 @@ class _MessagesListViewState extends State<MessagesListView> {
   @override
   Widget build(BuildContext context) {
     final currentUserId = Supabase.instance.client.auth.currentUser?.id;
+    final spaceId = widget.spaceId;
     final reversedMessages = widget.messages.reversed.toList();
 
     return ColoredBox(
@@ -94,12 +98,23 @@ class _MessagesListViewState extends State<MessagesListView> {
               ? reversedMessages[previousIndex]
               : null;
 
+          final sender = senderId == null
+              ? null
+              : widget.membersById[senderId];
+
           return MessageBubble(
             message: message,
             isMe: senderId == currentUserId,
             isGroup: widget.isGroup,
-            sender: senderId == null ? null : widget.membersById[senderId],
+            sender: sender,
             startsSenderRun: previous == null || previous.senderId != senderId,
+            onSenderTap: sender == null || spaceId == null
+                ? null
+                : () => MemberBottomSheet.show(
+                    context,
+                    member: sender,
+                    spaceId: spaceId,
+                  ),
           );
         },
       ),

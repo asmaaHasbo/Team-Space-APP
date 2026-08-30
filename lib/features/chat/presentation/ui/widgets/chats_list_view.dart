@@ -27,13 +27,13 @@ class ChatsListView extends StatelessWidget {
           itemBuilder: (_, index) => ChatListTile(
             item: chats[index],
 
-            // the chat room screen is not built yet
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => MessagesScreen(
                     chatId: chats[index].chat.id,
                     displayName: chats[index].displayName,
+                    otherUserId: chats[index].otherUserId,
                     chatType: chats[index].chat.type,
                     isDefault: chats[index].chat.isDefault,
                     avatarUrl: chats[index].avatarUrl,

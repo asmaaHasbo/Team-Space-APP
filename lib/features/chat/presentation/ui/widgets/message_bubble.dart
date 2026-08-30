@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_space/core/themes/app_colors.dart';
@@ -6,6 +5,7 @@ import 'package:team_space/core/themes/app_text_styles.dart';
 import 'package:team_space/features/chat/domain/entities/message.dart';
 import 'package:team_space/features/chat/domain/entities/space_member.dart';
 import 'package:team_space/features/chat/presentation/helper/chat_time_formatter.dart';
+import 'package:team_space/features/chat/presentation/helper/member_display_name.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/member_avatar.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -48,10 +48,7 @@ class MessageBubble extends StatelessWidget {
     // Only someone else's message inside a group carries a face and a name —
     // and only once the members are in, so no placeholder ever flashes.
     final showsSender = isGroup && !isMe && sender != null;
-    final fullName = sender?.fullName;
-    final senderName = fullName == null || fullName.isEmpty
-        ? context.tr('Unknown')
-        : fullName;
+    final senderName = MemberDisplayName.of(context, sender?.fullName);
 
     final bubble = Container(
       constraints: BoxConstraints(maxWidth: 0.75.sw),
