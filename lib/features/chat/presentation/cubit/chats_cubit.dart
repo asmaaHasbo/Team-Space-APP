@@ -1,10 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_space/core/error/handle_errors.dart';
+import 'package:team_space/core/shared/cubit/safe_cubit.dart';
 import 'package:team_space/features/chat/domain/entities/chat_list_item.dart';
 import 'package:team_space/features/chat/domain/usecases/get_my_chats.dart';
 import 'package:team_space/features/chat/presentation/cubit/chats_state.dart';
 
-class ChatsCubit extends Cubit<ChatsState> {
+class ChatsCubit extends SafeCubit<ChatsState> {
   ChatsCubit({required GetMyChats getMyChats})
     : _getMyChats = getMyChats,
       super(const ChatsInitial());

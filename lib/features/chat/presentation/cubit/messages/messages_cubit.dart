@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:team_space/core/error/handle_errors.dart';
+import 'package:team_space/core/shared/cubit/safe_cubit.dart';
 import 'package:team_space/features/chat/domain/entities/message.dart';
 import 'package:team_space/features/chat/domain/usecases/get_messages.dart';
 import 'package:team_space/features/chat/domain/usecases/send_message.dart';
@@ -13,7 +13,7 @@ import 'package:uuid/uuid.dart';
 
 part 'messages_state.dart';
 
-class MessagesCubit extends Cubit<MessagesState> {
+class MessagesCubit extends SafeCubit<MessagesState> {
   final String _chatId;
   final GetMessages _getMessages;
   final SendMessage _sendMessage;
@@ -155,8 +155,8 @@ class MessagesCubit extends Cubit<MessagesState> {
   }
 
   @override
-  Future<void> close() {
-    _messagesSubscription?.cancel();
+  Future<void> close() async {
+    await _messagesSubscription?.cancel();
     return super.close();
   }
 }
