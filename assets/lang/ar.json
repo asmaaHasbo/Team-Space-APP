@@ -234,6 +234,8 @@
   "cannot save empty text": "لا يمكن حفظ نص فارغ",
   "chats.default": "افتراضي",
   "chats.groupInfo.empty": "لا يوجد أعضاء في هذه المساحة",
+  "chats.groupInfo.invite": "دعوة المساحة",
+  "chats.groupInfo.inviteHint": "أي شخص لديه هذا الكود يمكنه الانضمام إلى المساحة",
   "chats.groupInfo.members": "الأعضاء",
   "chats.groupInfo.membersCount": "{} عضو",
   "chats.groupInfo.you": "(أنا)",

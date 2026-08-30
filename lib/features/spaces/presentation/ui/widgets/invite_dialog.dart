@@ -1,16 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:team_space/core/shared/widgets/setup_snack_bar_for_success_state.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/core/themes/app_radius.dart';
 import 'package:team_space/core/themes/app_text_styles.dart';
 import 'package:team_space/features/spaces/domain/entities/space.dart';
-import 'package:team_space/features/spaces/presentation/ui/widgets/invite_code_box.dart';
-import 'package:team_space/features/spaces/presentation/ui/widgets/invite_dialog_actions.dart';
 import 'package:team_space/features/spaces/presentation/ui/widgets/invite_dialog_header.dart';
+import 'package:team_space/features/spaces/presentation/ui/widgets/space_invite_card.dart';
 
 /// Shows the invite code of a space and lets the user copy or share it.
 /// It takes the whole [Space] so adding the invite link later needs no
@@ -25,19 +21,6 @@ class InviteDialog extends StatelessWidget {
       context: context,
       builder: (_) => InviteDialog(space: space),
     );
-  }
-
-  /// The only place the invite message is built — the invite link will just
-  /// add one more placeholder to this key.
-  String _shareText(BuildContext context) => context.tr(
-        'spaces.invite.shareMessage',
-        args: [space.name, space.inviteCode],
-      );
-
-  Future<void> _copyCode(BuildContext context) async {
-    await Clipboard.setData(ClipboardData(text: space.inviteCode));
-    if (!context.mounted) return;
-    setupSnackBarForSuccessState(context, context.tr('spaces.invite.copied'));
   }
 
   @override
@@ -56,12 +39,7 @@ class InviteDialog extends StatelessWidget {
           children: [
             InviteDialogHeader(spaceName: space.name),
             SizedBox(height: 20.h),
-            InviteCodeBox(inviteCode: space.inviteCode),
-            SizedBox(height: 20.h),
-            InviteDialogActions(
-              onCopy: () => _copyCode(context),
-              onShare: () => Share.share(_shareText(context)),
-            ),
+            SpaceInviteCard(space: space),
             SizedBox(height: 4.h),
             TextButton(
               onPressed: () => Navigator.of(context).pop(),

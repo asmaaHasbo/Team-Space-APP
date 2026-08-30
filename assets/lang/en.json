@@ -234,6 +234,8 @@
   "cannot save empty text": "Cannot save empty text",
   "chats.default": "Default",
   "chats.groupInfo.empty": "No members in this space",
+  "chats.groupInfo.invite": "Space invite",
+  "chats.groupInfo.inviteHint": "Anyone with this code can join the space",
   "chats.groupInfo.members": "Members",
   "chats.groupInfo.membersCount": "{} members",
   "chats.groupInfo.you": "(You)",

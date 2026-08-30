@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_space/features/chat/presentation/cubit/space_members_cubit/space_members_cubit.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/group_info_header.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/group_info_loading_list.dart';
+import 'package:team_space/features/chat/presentation/ui/widgets/group_invite_section.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/group_members_empty_view.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/space_members_error_view.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/group_members_list.dart';
@@ -35,6 +36,9 @@ class GroupInfoBody extends StatelessWidget {
                 isDefault: isDefault,
                 memberCount: members.length,
               ),
+              // Only the default group stands for the space as a whole, so it
+              // is the only one that hands out the space's invite code.
+              if (isDefault) GroupInviteSection(spaceId: spaceId),
               const GroupMembersSectionTitle(),
               // The header stays put even with nobody to list, so the screen
               // never loses the group it is describing.
