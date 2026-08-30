@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:team_space/features/chat/domain/entities/space_member.dart';
 import 'package:team_space/features/chat/presentation/cubit/messages/messages_cubit.dart';
+import 'package:team_space/features/chat/presentation/cubit/space_members_cubit/space_members_cubit.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/message_input_field.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/messages_empty_view.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/messages_error_view.dart';
@@ -34,29 +36,46 @@ class _MessagesBodyState extends State<MessagesBody> {
     return Column(
       children: [
         Expanded(
-          child: BlocBuilder<MessagesCubit, MessagesState>(
-            builder: (context, state) => switch (state) {
-              MessagesLoaded(:final messages) when messages.isEmpty =>
-                const MessagesEmptyView(),
-              MessagesLoaded(
-                :final messages,
-                :final isLoadingMore,
-                :final hasReachedEnd,
-              ) =>
-                MessagesListView(
-                  messages: messages,
-                  isGroup: widget.isGroup,
-                  isLoadingMore: isLoadingMore,
-                  hasReachedEnd: hasReachedEnd,
-                  onLoadMore: cubit.loadMoreMessages,
-                ),
-              MessagesError(:final message) => MessagesErrorView(
-                message: message,
+          // Indexed by id once per members change, so every bubble finds its
+          // sender without walking the list again on each new message.
+          child:
+              BlocSelector<
+                SpaceMembersCubit,
+                SpaceMembersState,
+                Map<String, SpaceMember>
+              >(
+                selector: (state) => state is SpaceMembersLoaded
+                    ? {
+                        for (final member in state.members)
+                          member.userId: member,
+                      }
+                    : const <String, SpaceMember>{},
+                builder: (context, membersById) =>
+                    BlocBuilder<MessagesCubit, MessagesState>(
+                      builder: (context, state) => switch (state) {
+                        MessagesLoaded(:final messages) when messages.isEmpty =>
+                          const MessagesEmptyView(),
+                        MessagesLoaded(
+                          :final messages,
+                          :final isLoadingMore,
+                          :final hasReachedEnd,
+                        ) =>
+                          MessagesListView(
+                            messages: messages,
+                            isGroup: widget.isGroup,
+                            membersById: membersById,
+                            isLoadingMore: isLoadingMore,
+                            hasReachedEnd: hasReachedEnd,
+                            onLoadMore: cubit.loadMoreMessages,
+                          ),
+                        MessagesError(:final message) => MessagesErrorView(
+                          message: message,
+                        ),
+                        MessagesInitial() || MessagesLoading() =>
+                          const MessagesLoadingList(),
+                      },
+                    ),
               ),
-              MessagesInitial() || MessagesLoading() =>
-                const MessagesLoadingList(),
-            },
-          ),
         ),
         // Sending only works once the chat is loaded, so the composer stays
         // hidden while it is still loading or has failed.

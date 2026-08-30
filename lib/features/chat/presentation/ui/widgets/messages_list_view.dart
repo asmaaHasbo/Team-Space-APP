@@ -3,12 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/features/chat/domain/entities/message.dart';
+import 'package:team_space/features/chat/domain/entities/space_member.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/message_bubble.dart';
-
 
 class MessagesListView extends StatefulWidget {
   final List<Message> messages;
   final bool isGroup;
+  final Map<String, SpaceMember> membersById;
   final bool isLoadingMore;
   final bool hasReachedEnd;
   final VoidCallback onLoadMore;
@@ -17,6 +18,7 @@ class MessagesListView extends StatefulWidget {
     super.key,
     required this.messages,
     required this.isGroup,
+    required this.membersById,
     required this.isLoadingMore,
     required this.hasReachedEnd,
     required this.onLoadMore,
@@ -82,10 +84,22 @@ class _MessagesListViewState extends State<MessagesListView> {
           }
 
           final message = reversedMessages[index];
+          final senderId = message.senderId;
+
+          // The list runs newest first, so the item after this one is the
+          // message that came right before it — a run of messages from the
+          // same person shows one face and one name at its start.
+          final previousIndex = index + 1;
+          final previous = previousIndex < reversedMessages.length
+              ? reversedMessages[previousIndex]
+              : null;
+
           return MessageBubble(
             message: message,
-            isMe: message.senderId == currentUserId,
+            isMe: senderId == currentUserId,
             isGroup: widget.isGroup,
+            sender: senderId == null ? null : widget.membersById[senderId],
+            startsSenderRun: previous == null || previous.senderId != senderId,
           );
         },
       ),
