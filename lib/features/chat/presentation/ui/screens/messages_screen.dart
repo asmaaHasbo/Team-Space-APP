@@ -15,6 +15,7 @@ class MessagesScreen extends StatelessWidget {
     required this.chatType,
     this.isDefault = false,
     this.avatarUrl,
+    this.otherUserId,
   });
 
   final String chatId;
@@ -22,6 +23,7 @@ class MessagesScreen extends StatelessWidget {
   final ChatType chatType;
   final bool isDefault;
   final String? avatarUrl;
+  final String? otherUserId;
 
   @override
   Widget build(BuildContext context) {

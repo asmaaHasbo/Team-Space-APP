@@ -7,10 +7,12 @@ import 'package:team_space/features/chat/data/repositories/chat_repository_impl.
 import 'package:team_space/features/chat/domain/repositories/chat_repository.dart';
 import 'package:team_space/features/chat/domain/usecases/get_messages.dart';
 import 'package:team_space/features/chat/domain/usecases/get_my_chats.dart';
+import 'package:team_space/features/chat/domain/usecases/get_or_create_direct_chat.dart';
 import 'package:team_space/features/chat/domain/usecases/send_message.dart';
 import 'package:team_space/features/chat/domain/usecases/watch_message.dart';
 import 'package:team_space/features/chat/presentation/cubit/chats_cubit.dart';
 import 'package:team_space/features/chat/presentation/cubit/messages/messages_cubit.dart';
+import 'package:team_space/features/chat/presentation/cubit/direct_chat/direct_chat_cubit.dart';
 import 'package:team_space/features/spaces/data/datasources/spaces_remote_data_source.dart';
 import 'package:team_space/features/spaces/data/repositories/spaces_repository_impl.dart';
 import 'package:team_space/features/spaces/domain/repositories/spaces_repository.dart';
@@ -113,6 +115,9 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton(() => WatchMessages(getIt<ChatRepository>()));
   getIt.registerLazySingleton(() => SendMessage(getIt<ChatRepository>()));
   getIt.registerLazySingleton(() => GetSpaceMembers(getIt<ChatRepository>()));
+  getIt.registerLazySingleton(
+    () => GetOrCreateDirectChat(getIt<ChatRepository>()),
+  );
 
   // cubit
   getIt.registerFactory<ChatsCubit>(
@@ -130,5 +135,9 @@ Future<void> setupGetIt() async {
 
   getIt.registerFactory<SpaceMembersCubit>(
     () => SpaceMembersCubit(getSpaceMembers: getIt<GetSpaceMembers>()),
+  );
+
+  getIt.registerFactory<DirectChatCubit>(
+    () => DirectChatCubit(getOrCreateDirectChat: getIt<GetOrCreateDirectChat>()),
   );
 }

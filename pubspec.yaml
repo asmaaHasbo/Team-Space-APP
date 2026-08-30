@@ -43,6 +43,7 @@ dependencies:
   flutter_screenutil: ^5.9.3
   redacted: ^1.0.13
   shimmer: ^3.0.0
+  cached_network_image: ^3.4.1
   dropdown_button2: ^3.1.0
   easy_localization: ^3.0.8
   intl_phone_field: ^3.2.0

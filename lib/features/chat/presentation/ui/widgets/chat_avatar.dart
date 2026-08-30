@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_space/core/themes/app_colors.dart';
 import 'package:team_space/core/themes/app_text_styles.dart';
 import 'package:team_space/features/chat/domain/entities/chat.dart';
+import 'package:team_space/features/chat/presentation/helper/avatar_tint.dart';
 
 /// The circle at the start of a chat row: `#` for the space default chat,
 /// a group glyph for other group chats, and initials for a direct chat.
@@ -22,7 +23,7 @@ class ChatAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tint = isDefault ? AppColors.avatarTints.first : _tintOf(name);
+    final tint = isDefault ? AppColors.avatarTints.first : AvatarTint.of(name);
 
     final child = switch (type) {
       ChatType.group when isDefault => Icon(
@@ -36,7 +37,7 @@ class ChatAvatar extends StatelessWidget {
         size: (size * 0.55).sp,
       ),
       ChatType.direct => Text(
-        _initialsOf(name),
+        AvatarTint.initialsOf(name),
         style: AppTextStyles.font15Bold.copyWith(color: tint.foreground),
       ),
     };
@@ -51,27 +52,5 @@ class ChatAvatar extends StatelessWidget {
       ),
       child: child,
     );
-  }
-
-  /// First letter of the first two words — «محمد سعيد» reads as «م س».
-  String _initialsOf(String value) {
-    final words = value.trim().split(RegExp(r'\s+'))
-      ..removeWhere((word) => word.isEmpty);
-
-    if (words.isEmpty) return '?';
-    if (words.length == 1) {
-      final word = words.first;
-      return (word.length >= 2 ? word.substring(0, 2) : word).toUpperCase();
-    }
-    return '${words[0][0]} ${words[1][0]}'.toUpperCase();
-  }
-
-  /// Code-unit sum instead of `hashCode` so the color is stable across runs.
-  ({Color background, Color foreground}) _tintOf(String value) {
-    var sum = 0;
-    for (final unit in value.codeUnits) {
-      sum += unit;
-    }
-    return AppColors.avatarTints[sum % AppColors.avatarTints.length];
   }
 }
