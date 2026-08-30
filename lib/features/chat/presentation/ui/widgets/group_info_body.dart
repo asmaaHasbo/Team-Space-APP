@@ -5,7 +5,7 @@ import 'package:team_space/features/chat/presentation/cubit/space_members_cubit/
 import 'package:team_space/features/chat/presentation/ui/widgets/group_info_header.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/group_info_loading_list.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/group_members_empty_view.dart';
-import 'package:team_space/features/chat/presentation/ui/widgets/group_members_error_view.dart';
+import 'package:team_space/features/chat/presentation/ui/widgets/space_members_error_view.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/group_members_list.dart';
 import 'package:team_space/features/chat/presentation/ui/widgets/group_members_section_title.dart';
 
@@ -48,7 +48,7 @@ class GroupInfoBody extends StatelessWidget {
             ],
           ),
         ),
-        SpaceMembersError(:final message) => GroupMembersErrorView(
+        SpaceMembersError(:final message) => SpaceMembersErrorView(
           message: message,
           spaceId: spaceId,
         ),

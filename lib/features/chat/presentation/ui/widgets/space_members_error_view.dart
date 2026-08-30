@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_space/core/shared/widgets/app_error_view.dart';
 import 'package:team_space/features/chat/presentation/cubit/space_members_cubit/space_members_cubit.dart';
 
-class GroupMembersErrorView extends StatelessWidget {
+class SpaceMembersErrorView extends StatelessWidget {
   final String message;
   final String spaceId;
 
-  const GroupMembersErrorView({
+  const SpaceMembersErrorView({
     super.key,
     required this.message,
     required this.spaceId,
