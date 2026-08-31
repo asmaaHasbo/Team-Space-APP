@@ -31,6 +31,8 @@ abstract interface class ChatRemoteDataSource {
   });
 
   Future<List<SpaceMemberModel>> getSpaceMembers({required String spaceId});
+
+  Future<void> markChatAsRead({required String chatId});
 }
 
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
@@ -218,5 +220,11 @@ watchMessages في ٥ نقط:
     } catch (e) {
       return handleError(e);
     }
+  }
+
+  //================================ markChatAsRead =================
+  @override
+  Future<void> markChatAsRead({required String chatId}) async {
+    await _supabase.rpc('mark_chat_as_read', params: {'p_chat_id': chatId});
   }
 }

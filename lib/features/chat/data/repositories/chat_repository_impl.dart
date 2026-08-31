@@ -60,4 +60,9 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<List<SpaceMember>> getSpaceMembers({required String spaceId}) {
     return _remoteDataSource.getSpaceMembers(spaceId: spaceId);
   }
+
+  @override
+  Future<void> markChatAsRead({required String chatId}) {
+    return _remoteDataSource.markChatAsRead(chatId: chatId);
+  }
 }

@@ -75,8 +75,8 @@ class _MessagesBodyState extends State<MessagesBody> {
                         MessagesError(:final message) => MessagesErrorView(
                           message: message,
                         ),
-                        MessagesInitial() || MessagesLoading() =>
-                          const MessagesLoadingList(),
+                        MessagesInitial() ||
+                        MessagesLoading() => const MessagesLoadingList(),
                       },
                     ),
               ),

@@ -9,8 +9,7 @@ import 'package:team_space/features/chat/presentation/ui/widgets/chat_list_tile.
 
 class ChatsListView extends StatelessWidget {
   final List<ChatListItem> chats;
-
-  const ChatsListView({super.key, required this.chats});
+  const ChatsListView({super.key, required this.chats, });
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +23,11 @@ class ChatsListView extends StatelessWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           itemCount: chats.length,
           separatorBuilder: (_, _) => const ChatListDivider(),
-          itemBuilder: (_, index) => ChatListTile(
+          itemBuilder: (itemContext, index) => ChatListTile(
             item: chats[index],
 
-            onTap: () {
-              Navigator.of(context).push(
+            onTap: () async {
+              await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => MessagesScreen(
                     chatId: chats[index].chat.id,
@@ -40,6 +39,14 @@ class ChatsListView extends StatelessWidget {
                   ),
                 ),
               );
+
+              if (!itemContext.mounted) return;
+
+              await itemContext.read<ChatsCubit>().markAsRead(
+                chats[index].chat.id,
+              );
+              if (!itemContext.mounted) return;
+              itemContext.read<ChatsCubit>().refresh();
             },
           ),
         ),

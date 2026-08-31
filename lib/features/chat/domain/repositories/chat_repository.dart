@@ -25,4 +25,7 @@ abstract class ChatRepository {
   });
 
   Future<List<SpaceMember>> getSpaceMembers({required String spaceId});
+  
+  Future<void> markChatAsRead({required String chatId});
+
 }

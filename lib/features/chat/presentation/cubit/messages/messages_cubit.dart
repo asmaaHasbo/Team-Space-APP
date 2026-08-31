@@ -23,7 +23,9 @@ class MessagesCubit extends SafeCubit<MessagesState> {
     required GetMessages getMessages,
     required SendMessage sendMessage,
     required WatchMessages watchMessages,
-  }) : _chatId = chatId,
+    
+  }) : 
+       _chatId = chatId,
        _sendMessage = sendMessage,
        _getMessages = getMessages,
        _watchMessages = watchMessages,
@@ -153,6 +155,8 @@ class MessagesCubit extends SafeCubit<MessagesState> {
       },
     );
   }
+
+
 
   @override
   Future<void> close() async {

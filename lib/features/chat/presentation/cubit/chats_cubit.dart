@@ -1,13 +1,20 @@
+import 'package:flutter/foundation.dart';
 import 'package:team_space/core/error/handle_errors.dart';
 import 'package:team_space/core/shared/cubit/safe_cubit.dart';
 import 'package:team_space/features/chat/domain/entities/chat_list_item.dart';
 import 'package:team_space/features/chat/domain/usecases/get_my_chats.dart';
+import 'package:team_space/features/chat/domain/usecases/mark_chat_as_read.dart';
 import 'package:team_space/features/chat/presentation/cubit/chats_state.dart';
 
 class ChatsCubit extends SafeCubit<ChatsState> {
-  ChatsCubit({required GetMyChats getMyChats})
-    : _getMyChats = getMyChats,
-      super(const ChatsInitial());
+  final MarkChatAsRead _markChatAsRead;
+
+  ChatsCubit({
+    required GetMyChats getMyChats,
+    required MarkChatAsRead markChatAsRead,
+  }) : _markChatAsRead = markChatAsRead,
+       _getMyChats = getMyChats,
+       super(const ChatsInitial());
 
   final GetMyChats _getMyChats;
 
@@ -65,4 +72,13 @@ class ChatsCubit extends SafeCubit<ChatsState> {
 
     emit(ChatsLoaded(visible, query: _query));
   }
+
+  //========================markAsRead ===============
+ Future<void> markAsRead(String chatId) async {
+  try {
+    await _markChatAsRead(chatId: chatId);
+  } catch (e) {
+    debugPrint('markChatAsRead failed: $e');
+  }
+}
 }

@@ -44,7 +44,7 @@ class _ChatsBodyState extends State<ChatsBody> {
           ChatsLoaded(:final chats, :final query)
               when chats.isEmpty && query.isNotEmpty =>
             const ChatsNoResults(),
-          ChatsLoaded(:final chats) => ChatsListView(chats: chats),
+          ChatsLoaded(:final chats) => ChatsListView(chats: chats  ),
           ChatsError(:final message) => ChatsErrorView(message: message),
           ChatsInitial() || ChatsLoading() => const ChatsLoadingList(),
         },
