@@ -15,6 +15,10 @@ class MainButton extends StatelessWidget {
   final Color? textColor;
   final double? textSize;
 
+  /// Optional glyph before the label — omitted, the button looks exactly as
+  /// it always has.
+  final IconData? icon;
+
   const MainButton({
     super.key,
     required this.text,
@@ -26,11 +30,33 @@ class MainButton extends StatelessWidget {
     this.textColor,
     this.borderRadius = AppRadius.base,
     this.textSize,
+    this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
     final background = color ?? AppColors.primary;
+    final foreground = textColor ?? Colors.white;
+    final glyph = icon;
+
+    final label = Text(
+      text,
+      style: AppTextStyles.font20Bold.copyWith(
+        color: foreground,
+        fontSize: textSize?.sp,
+      ),
+    );
+
+    final Widget content = glyph == null
+        ? label
+        : Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(glyph, color: foreground, size: 22.sp),
+              SizedBox(width: 8.w),
+              Flexible(child: label),
+            ],
+          );
 
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
@@ -51,13 +77,7 @@ class MainButton extends StatelessWidget {
                 strokeWidth: 2.5,
               ),
             )
-          : Text(
-              text,
-              style: AppTextStyles.font20Bold.copyWith(
-                color: textColor ?? Colors.white,
-                fontSize: textSize?.sp,
-              ),
-            ),
+          : content,
     );
   }
 }

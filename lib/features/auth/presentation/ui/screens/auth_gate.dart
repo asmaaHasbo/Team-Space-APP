@@ -18,7 +18,6 @@ class _AuthGateState extends State<AuthGate> {
   @override
   void initState() {
     super.initState();
-    // بعد أول frame عشان الـ Navigator يبقى جاهز لو الرد رجع فوري
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       context.read<AuthCubit>().checkAuthStatus();

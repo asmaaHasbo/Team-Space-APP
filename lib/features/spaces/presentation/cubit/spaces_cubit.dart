@@ -1,0 +1,84 @@
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:team_space/core/helper/app_preferences.dart';
+
+import '../../domain/entities/space.dart';
+import '../../domain/usecases/get_my_spaces.dart';
+import '../../domain/usecases/create_space.dart';
+import '../../domain/usecases/join_by_code.dart';
+import '../../../../core/error/handle_errors.dart';
+
+part 'spaces_state.dart';
+
+class SpacesCubit extends Cubit<SpacesState> {
+  final GetMySpaces _getMySpaces;
+  final CreateSpace _createSpace;
+  final JoinByCode _joinByCode;
+  final AppPreferences _prefs;
+
+  SpacesCubit({
+    required GetMySpaces getMySpaces,
+    required CreateSpace createSpace,
+    required JoinByCode joinByCode,
+    required AppPreferences prefs,
+  }) : _getMySpaces = getMySpaces,
+       _createSpace = createSpace,
+       _joinByCode = joinByCode,
+       _prefs = prefs,
+       super(const SpacesInitial());
+
+  // the durable list — survives action-state changes
+  List<Space> _spaces = [];
+  Space? _selectedSpace;
+
+  Future<void> getMySpaces() async {
+    emit(const SpacesLoading());
+    try {
+      _spaces = await _getMySpaces();
+      if (_spaces.isEmpty) {
+        _selectedSpace = null;
+        emit(const SpacesEmpty());
+        return;
+      }
+
+      final savedId = _prefs.getSelectedSpaceId();
+      _selectedSpace =
+          _spaces.where((s) => s.id == savedId).firstOrNull ?? _spaces.first;
+      emit(SpacesLoaded(_spaces, _selectedSpace!));
+    } on AppException catch (e) {
+      emit(SpacesError(e.message));
+    }
+  }
+
+  Future<void> createSpace(String name) async {
+    emit(const CreateSpaceLoading());
+    try {
+      final space = await _createSpace(name: name);
+      // you land inside the space you just made, so the refresh below picks
+      // it up instead of whatever was selected before.
+      await _prefs.setSelectedSpaceId(space.id);
+      emit(CreateSpaceSuccess(space));
+      await getMySpaces();
+    } on AppException catch (e) {
+      emit(CreateSpaceError(e.message));
+    }
+  }
+
+  Future<void> joinByCode(String inviteCode) async {
+    emit(const JoinSpaceLoading());
+    try {
+      final space = await _joinByCode(inviteCode: inviteCode);
+      await _prefs.setSelectedSpaceId(space.id);
+      emit(const JoinSpaceSuccess());
+      await getMySpaces(); // refresh the list from the server
+    } on AppException catch (e) {
+      emit(JoinSpaceError(e.message));
+    }
+  }
+
+  void selectSpace(Space space) {
+    _selectedSpace = space;
+    _prefs.setSelectedSpaceId(space.id);
+    emit(SpacesLoaded(_spaces, space));
+  }
+}

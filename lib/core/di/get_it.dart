@@ -1,5 +1,26 @@
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:team_space/core/helper/app_preferences.dart';
+import 'package:team_space/features/chat/data/datasources/chat_remote_data_source.dart';
+import 'package:team_space/features/chat/data/repositories/chat_repository_impl.dart';
+import 'package:team_space/features/chat/domain/repositories/chat_repository.dart';
+import 'package:team_space/features/chat/domain/usecases/get_messages.dart';
+import 'package:team_space/features/chat/domain/usecases/get_my_chats.dart';
+import 'package:team_space/features/chat/domain/usecases/get_or_create_direct_chat.dart';
+import 'package:team_space/features/chat/domain/usecases/mark_chat_as_read.dart';
+import 'package:team_space/features/chat/domain/usecases/send_message.dart';
+import 'package:team_space/features/chat/domain/usecases/watch_message.dart';
+import 'package:team_space/features/chat/presentation/cubit/chats_cubit.dart';
+import 'package:team_space/features/chat/presentation/cubit/messages/messages_cubit.dart';
+import 'package:team_space/features/chat/presentation/cubit/direct_chat/direct_chat_cubit.dart';
+import 'package:team_space/features/spaces/data/datasources/spaces_remote_data_source.dart';
+import 'package:team_space/features/spaces/data/repositories/spaces_repository_impl.dart';
+import 'package:team_space/features/spaces/domain/repositories/spaces_repository.dart';
+import 'package:team_space/features/spaces/domain/usecases/create_space.dart';
+import 'package:team_space/features/spaces/domain/usecases/get_my_spaces.dart';
+import 'package:team_space/features/spaces/domain/usecases/join_by_code.dart';
+import 'package:team_space/features/spaces/presentation/cubit/spaces_cubit.dart';
 
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
@@ -12,11 +33,16 @@ import '../../features/auth/domain/usecases/watch_auth_state.dart';
 import '../../features/auth/presentation/cubit/auth/auth_cubit.dart';
 import '../../features/auth/presentation/cubit/login/login_cubit.dart';
 import '../../features/auth/presentation/cubit/register/register_cubit.dart';
+import '../../features/chat/domain/usecases/get_space_members.dart';
+import '../../features/chat/presentation/cubit/space_members_cubit/space_members_cubit.dart';
 
 final getIt = GetIt.instance;
 
 /// بتتنادى مرة واحدة في الـ main بعد `Supabase.initialize`
 Future<void> setupGetIt() async {
+  final prefs = await SharedPreferences.getInstance();
+  getIt.registerLazySingleton(() => AppPreferences(prefs));
+
   //==================== external ====================
   getIt.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
 
@@ -45,4 +71,78 @@ Future<void> setupGetIt() async {
   );
   getIt.registerFactory<LoginCubit>(() => LoginCubit(login: getIt()));
   getIt.registerFactory<RegisterCubit>(() => RegisterCubit(register: getIt()));
+
+  //-------------------------------- spaces -------------------
+
+  // data source
+  getIt.registerLazySingleton<SpacesRemoteDataSource>(
+    () => SpacesRemoteDataSourceImpl(getIt<SupabaseClient>()),
+  );
+
+  // repository
+  getIt.registerLazySingleton<SpacesRepository>(
+    () => SpacesRepositoryImpl(getIt<SpacesRemoteDataSource>()),
+  );
+
+  // usecases
+  getIt.registerLazySingleton(() => GetMySpaces(getIt<SpacesRepository>()));
+  getIt.registerLazySingleton(() => CreateSpace(getIt<SpacesRepository>()));
+  getIt.registerLazySingleton(() => JoinByCode(getIt<SpacesRepository>()));
+
+  // cubit
+  getIt.registerLazySingleton(
+    () => SpacesCubit(
+      getMySpaces: getIt<GetMySpaces>(),
+      createSpace: getIt<CreateSpace>(),
+      joinByCode: getIt<JoinByCode>(),
+      prefs: getIt<AppPreferences>(),
+    ),
+  );
+
+  //==================== chats ====================
+  //data source
+  getIt.registerLazySingleton<ChatRemoteDataSource>(
+    () => ChatRemoteDataSourceImpl(getIt<SupabaseClient>()),
+  );
+
+  // repository
+  getIt.registerLazySingleton<ChatRepository>(
+    () => ChatRepositoryImpl(getIt<ChatRemoteDataSource>()),
+  );
+
+  // usecases
+  getIt.registerLazySingleton(() => GetMyChats(getIt<ChatRepository>()));
+  getIt.registerLazySingleton(() => GetMessages(getIt<ChatRepository>()));
+  getIt.registerLazySingleton(() => WatchMessages(getIt<ChatRepository>()));
+  getIt.registerLazySingleton(() => SendMessage(getIt<ChatRepository>()));
+  getIt.registerLazySingleton(() => GetSpaceMembers(getIt<ChatRepository>()));
+  getIt.registerLazySingleton(
+    () => GetOrCreateDirectChat(getIt<ChatRepository>()),
+  );
+  getIt.registerLazySingleton(
+    () => MarkChatAsRead(repository: getIt<ChatRepository>()),
+  );
+
+  // cubit
+  getIt.registerFactory<ChatsCubit>(
+    () => ChatsCubit(getMyChats: getIt<GetMyChats>(), markChatAsRead: getIt()),
+  );
+
+  getIt.registerFactoryParam<MessagesCubit, String, void>(
+    (chatId, _) => MessagesCubit(
+      getMessages: getIt(),
+      sendMessage: getIt(),
+      watchMessages: getIt(),
+      chatId: chatId,
+    ),
+  );
+
+  getIt.registerFactory<SpaceMembersCubit>(
+    () => SpaceMembersCubit(getSpaceMembers: getIt<GetSpaceMembers>()),
+  );
+
+  getIt.registerFactory<DirectChatCubit>(
+    () =>
+        DirectChatCubit(getOrCreateDirectChat: getIt<GetOrCreateDirectChat>()),
+  );
 }

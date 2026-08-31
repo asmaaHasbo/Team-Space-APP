@@ -1,11 +1,12 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart' show Equatable;
+import 'package:team_space/core/constants/app_flags.dart';
 import 'package:team_space/core/error/handle_errors.dart';
+import 'package:team_space/core/shared/cubit/safe_cubit.dart';
 import 'package:team_space/features/auth/domain/usecases/register.dart';
 
 part 'register_state.dart';
 
-class RegisterCubit extends Cubit<RegisterState> {
+class RegisterCubit extends SafeCubit<RegisterState> {
   final Register _register;
 
   RegisterCubit({required Register register})
@@ -26,7 +27,11 @@ class RegisterCubit extends Cubit<RegisterState> {
         email: email,
         password: password,
       );
-      emit(RegisterEmailConfirmationRequired(email));
+      emit(
+        AppFlags.requireEmailConfirmation
+            ? RegisterEmailConfirmationRequired(email)
+            : const RegisterSuccess(),
+      );
     } on AppException catch (e) {
       emit(RegisterError(e.message));
     }

@@ -10,7 +10,9 @@ import 'package:team_space/core/routing/app_routes.dart';
 import 'package:team_space/core/shared/widgets/app_text_field.dart';
 import 'package:team_space/core/shared/widgets/main_button.dart';
 import 'package:team_space/core/shared/widgets/setup_snack_bar_failure_state.dart';
+import 'package:team_space/core/shared/widgets/setup_snack_bar_for_success_state.dart';
 import 'package:team_space/core/themes/app_colors.dart';
+import 'package:team_space/features/auth/presentation/cubit/auth/auth_cubit.dart';
 import 'package:team_space/features/auth/presentation/cubit/register/register_cubit.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -152,6 +154,14 @@ class _RegisterFormState extends State<RegisterForm> {
 
   void _onStateChanged(BuildContext context, RegisterState state) {
     switch (state) {
+      // confirm-email مقفول، فالـ signUp فتح جلسة على طول. بنسلّم للـ AuthCubit
+      // زي ما الدخول العادي بيعمل — هو اللي بيوصّل للـ home.
+      case RegisterSuccess():
+        setupSnackBarForSuccessState(
+          context,
+          context.tr('Account created successfully'),
+        );
+        context.read<AuthCubit>().checkAuthStatus();
       // confirm-email شغّال، فالمستخدم مبيدخلش التطبيق بعد التسجيل —
       // بيروح لشاشة تأكيد الإيميل. pushReplacement عشان مايرجعش لفورم مليان.
       case RegisterEmailConfirmationRequired(:final email):

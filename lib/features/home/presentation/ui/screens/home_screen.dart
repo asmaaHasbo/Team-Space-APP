@@ -1,10 +1,11 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:team_space/features/home/presentation/ui/widgets/space_switcher_button.dart';
-import 'package:team_space/features/home/presentation/ui/widgets/tabs/chats_tab.dart';
-import 'package:team_space/features/home/presentation/ui/widgets/tabs/profile_tab.dart';
-import 'package:team_space/features/home/presentation/ui/widgets/tabs/storage_tab.dart';
-import 'package:team_space/features/home/presentation/ui/widgets/tabs/tasks_tab.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:team_space/core/di/get_it.dart';
+import 'package:team_space/features/chat/presentation/cubit/chats_cubit.dart';
+import 'package:team_space/features/home/presentation/ui/screens/no_space_screen.dart';
+import 'package:team_space/features/home/presentation/ui/widgets/home_error_view.dart';
+import 'package:team_space/features/home/presentation/ui/widgets/home_space_shell.dart';
+import 'package:team_space/features/spaces/presentation/cubit/spaces_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,46 +15,32 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    context.read<SpacesCubit>().getMySpaces();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const SpaceSwitcherButton()),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: const [
-          ChatsTab(),
-          TasksTab(),
-          StorageTab(),
-          ProfileTab(),
-        ],
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) => setState(() => _currentIndex = index),
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.chat_bubble_outline_rounded),
-            selectedIcon: const Icon(Icons.chat_bubble_rounded),
-            label: context.tr('tabs.chats'),
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.assignment_outlined),
-            selectedIcon: const Icon(Icons.assignment_rounded),
-            label: context.tr('tabs.tasks'),
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.folder_outlined),
-            selectedIcon: const Icon(Icons.folder_rounded),
-            label: context.tr('tabs.storage'),
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.person_outline_rounded),
-            selectedIcon: const Icon(Icons.person_rounded),
-            label: context.tr('tabs.profile'),
-          ),
-        ],
+    // Above the builder so the app bar search and the chats tab share one cubit.
+    return BlocProvider<ChatsCubit>(
+      create: (_) => getIt<ChatsCubit>(),
+      child: BlocBuilder<SpacesCubit, SpacesState>(
+        // Create / join action states are handled by listeners; they must not
+        // tear down the shell while the user is working inside it.
+        buildWhen: (previous, current) =>
+            current is SpacesInitial ||
+            current is SpacesLoading ||
+            current is SpacesLoaded ||
+            current is SpacesEmpty ||
+            current is SpacesError,
+        builder: (context, state) => switch (state) {
+          SpacesLoaded() => const HomeSpaceShell(),
+          SpacesEmpty() => const NoSpaceScreen(),
+          SpacesError(:final message) => HomeErrorView(message: message),
+          _ => const Scaffold(body: Center(child: CircularProgressIndicator())),
+        },
       ),
     );
   }

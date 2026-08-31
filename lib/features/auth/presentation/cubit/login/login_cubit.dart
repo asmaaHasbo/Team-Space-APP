@@ -1,9 +1,9 @@
-import 'package:bloc/bloc.dart';
 import 'package:team_space/core/error/handle_errors.dart';
+import 'package:team_space/core/shared/cubit/safe_cubit.dart';
 import 'package:team_space/features/auth/domain/usecases/login.dart';
 import 'package:team_space/features/auth/presentation/cubit/login/login_state.dart';
 
-class LoginCubit extends Cubit<LoginState> {
+class LoginCubit extends SafeCubit<LoginState> {
   final Login _login;
 
   LoginCubit({required Login login})
