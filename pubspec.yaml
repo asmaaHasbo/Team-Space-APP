@@ -54,6 +54,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   uuid: ^4.6.0
+  firebase_core: ^4.14.0
+  firebase_messaging: ^16.6.0
 
 dev_dependencies:
   flutter_test:
