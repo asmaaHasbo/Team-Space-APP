@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:team_space/core/di/get_it.dart';
 import 'package:team_space/core/language/app_locales.dart';
+import 'package:team_space/core/notifications/notifications_service.dart';
 import 'package:team_space/team_space_app.dart';
 
 Future<void> main() async {
@@ -17,7 +18,7 @@ Future<void> main() async {
     publishableKey: dotenv.env['SUPABASE_KEY']!,
   );
   await setupGetIt();
-
+   getIt<NotificationsService>().listenToTokenRefresh();
   runApp(
     EasyLocalization(
       supportedLocales: AppLocales.supported,

@@ -30,6 +30,7 @@ class _MessagesBodyState extends State<MessagesBody> {
     final cubit = context.read<MessagesCubit>();
     cubit.loadMessages();
     cubit.subscribeToNewMessages();
+    cubit.markAsRead();
   }
 
   @override

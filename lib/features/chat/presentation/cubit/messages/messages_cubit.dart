@@ -7,6 +7,7 @@ import 'package:team_space/core/error/handle_errors.dart';
 import 'package:team_space/core/shared/cubit/safe_cubit.dart';
 import 'package:team_space/features/chat/domain/entities/message.dart';
 import 'package:team_space/features/chat/domain/usecases/get_messages.dart';
+import 'package:team_space/features/chat/domain/usecases/mark_chat_as_read.dart';
 import 'package:team_space/features/chat/domain/usecases/send_message.dart';
 import 'package:team_space/features/chat/domain/usecases/watch_message.dart';
 import 'package:uuid/uuid.dart';
@@ -18,17 +19,18 @@ class MessagesCubit extends SafeCubit<MessagesState> {
   final GetMessages _getMessages;
   final SendMessage _sendMessage;
   final WatchMessages _watchMessages;
+  final MarkChatAsRead _markChatAsRead;
   MessagesCubit({
     required String chatId,
     required GetMessages getMessages,
     required SendMessage sendMessage,
     required WatchMessages watchMessages,
-    
-  }) : 
-       _chatId = chatId,
+    required MarkChatAsRead markChatAsRead,
+  }) : _chatId = chatId,
        _sendMessage = sendMessage,
        _getMessages = getMessages,
        _watchMessages = watchMessages,
+       _markChatAsRead = markChatAsRead,
        super(const MessagesInitial());
 
   StreamSubscription<Message>? _messagesSubscription;
@@ -148,6 +150,10 @@ class MessagesCubit extends SafeCubit<MessagesState> {
         emit(
           latestState.copyWith(messages: [...latestState.messages, message]),
         );
+
+          // الرسالة ظهرت على الشاشة فعلاً، يبقى هي مقروءة — من غير السطر ده
+        // الإشعار هيرن على حاجة اليوزر قاعد بيقراها.
+        markAsRead(); 
       },
       onError: (Object error) {
         // الرسايل اللي على الشاشة سليمة فمابنمسحش حاجة
@@ -156,7 +162,14 @@ class MessagesCubit extends SafeCubit<MessagesState> {
     );
   }
 
-
+  //============================== mark as read ========================================
+  Future<void> markAsRead() async {
+    try {
+      await _markChatAsRead(chatId: _chatId); // الاسم عندك ممكن يكون مختلف
+    } catch (e) {
+      debugPrint('markChatAsRead failed: $e');
+    }
+  }
 
   @override
   Future<void> close() async {

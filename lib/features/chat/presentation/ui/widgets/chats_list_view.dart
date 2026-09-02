@@ -9,7 +9,7 @@ import 'package:team_space/features/chat/presentation/ui/widgets/chat_list_tile.
 
 class ChatsListView extends StatelessWidget {
   final List<ChatListItem> chats;
-  const ChatsListView({super.key, required this.chats, });
+  const ChatsListView({super.key, required this.chats});
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +39,8 @@ class ChatsListView extends StatelessWidget {
                   ),
                 ),
               );
-
-              if (!itemContext.mounted) return;
-
-              await itemContext.read<ChatsCubit>().markAsRead(
-                chats[index].chat.id,
-              );
+              // refresh the list after returning from the messages screen
+              // in case a new message was sent
               if (!itemContext.mounted) return;
               itemContext.read<ChatsCubit>().refresh();
             },

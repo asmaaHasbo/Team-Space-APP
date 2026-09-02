@@ -1,7 +1,9 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:team_space/core/helper/app_preferences.dart';
+import 'package:team_space/core/notifications/notifications_service.dart';
 import 'package:team_space/features/chat/data/datasources/chat_remote_data_source.dart';
 import 'package:team_space/features/chat/data/repositories/chat_repository_impl.dart';
 import 'package:team_space/features/chat/domain/repositories/chat_repository.dart';
@@ -38,14 +40,20 @@ import '../../features/chat/presentation/cubit/space_members_cubit/space_members
 
 final getIt = GetIt.instance;
 
-/// بتتنادى مرة واحدة في الـ main بعد `Supabase.initialize`
 Future<void> setupGetIt() async {
   final prefs = await SharedPreferences.getInstance();
   getIt.registerLazySingleton(() => AppPreferences(prefs));
 
   //==================== external ====================
   getIt.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
+  getIt.registerLazySingleton<FirebaseMessaging>(
+    () => FirebaseMessaging.instance,
+  );
 
+  //==================== notifications ====================
+  getIt.registerLazySingleton<NotificationsService>(
+    () => NotificationsService(getIt(), getIt()),
+  );
   //==================== auth ====================
   getIt.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(getIt()),
@@ -67,6 +75,7 @@ Future<void> setupGetIt() async {
       getCurrentUser: getIt(),
       logout: getIt(),
       watchAuthState: getIt(),
+      notifications: getIt(),
     ),
   );
   getIt.registerFactory<LoginCubit>(() => LoginCubit(login: getIt()));
@@ -125,7 +134,7 @@ Future<void> setupGetIt() async {
 
   // cubit
   getIt.registerFactory<ChatsCubit>(
-    () => ChatsCubit(getMyChats: getIt<GetMyChats>(), markChatAsRead: getIt()),
+    () => ChatsCubit(getMyChats: getIt<GetMyChats>()),
   );
 
   getIt.registerFactoryParam<MessagesCubit, String, void>(
@@ -133,6 +142,7 @@ Future<void> setupGetIt() async {
       getMessages: getIt(),
       sendMessage: getIt(),
       watchMessages: getIt(),
+      markChatAsRead: getIt(),
       chatId: chatId,
     ),
   );
