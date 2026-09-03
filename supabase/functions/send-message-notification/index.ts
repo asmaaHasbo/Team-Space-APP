@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { JWT } from "npm:google-auth-library@9";
 
@@ -15,8 +16,8 @@ Deno.serve(async (req) => {
     "get_notification_targets",
     {
       p_chat_id: message.chat_id,
-      p_sender_id: message.created_by,      
-      p_sent_at: message.created_at
+      p_sender_id: message.created_by,
+      p_sent_at: message.created_at,
     },
   );
 
@@ -54,6 +55,15 @@ Deno.serve(async (req) => {
               notification: {
                 title: senderName,
                 body: message.message_content,
+              },
+              // أندرويد بحت: القناة بتحدد شكل العرض، والـ 
+              // priority بيحدد سرعة التوصيل
+              android: {
+                priority: "high",
+                notification: {
+                  channel_id: "messages_channel",
+                  icon: "ic_notification",
+                },
               },
               data: {
                 chat_id: message.chat_id,

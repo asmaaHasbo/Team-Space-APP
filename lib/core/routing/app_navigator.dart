@@ -15,4 +15,9 @@ class AppNavigator {
   static void replaceAllWith(String routeName) {
     key.currentState?.pushNamedAndRemoveUntil(routeName, (route) => false);
   }
+
+  /// يفتح شاشة فوق اللي مفتوحة — الرجوع بيرجّع للي كانت تحتها
+static void push(String routeName, {Object? arguments}) {
+  key.currentState?.pushNamed(routeName, arguments: arguments);
+}
 }

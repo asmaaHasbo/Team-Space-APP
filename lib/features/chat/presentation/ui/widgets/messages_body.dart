@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:team_space/core/di/get_it.dart';
+import 'package:team_space/core/notifications/active_chat.dart';
 import 'package:team_space/features/chat/domain/entities/space_member.dart';
 import 'package:team_space/features/chat/presentation/cubit/messages/messages_cubit.dart';
 import 'package:team_space/features/chat/presentation/cubit/space_members_cubit/space_members_cubit.dart';
@@ -16,8 +18,10 @@ class MessagesBody extends StatefulWidget {
 
   /// Needed to open a direct chat with whoever wrote a bubble.
   final String? spaceId;
+  final String chatId;
 
-  const MessagesBody({super.key, required this.isGroup, this.spaceId});
+
+  const MessagesBody({super.key, required this.isGroup, this.spaceId, required this.chatId});
 
   @override
   State<MessagesBody> createState() => _MessagesBodyState();
@@ -31,6 +35,7 @@ class _MessagesBodyState extends State<MessagesBody> {
     cubit.loadMessages();
     cubit.subscribeToNewMessages();
     cubit.markAsRead();
+    getIt<ActiveChat>().enter(widget.chatId);
   }
 
   @override
@@ -91,5 +96,11 @@ class _MessagesBodyState extends State<MessagesBody> {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    getIt<ActiveChat>().leave(widget.chatId);
+    super.dispose();
   }
 }

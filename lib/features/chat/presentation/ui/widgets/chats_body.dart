@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:team_space/features/chat/presentation/cubit/chats_cubit.dart';
-import 'package:team_space/features/chat/presentation/cubit/chats_state.dart';
-import 'package:team_space/features/chat/presentation/ui/widgets/chats_error_view.dart';
-import 'package:team_space/features/chat/presentation/ui/widgets/chats_list_view.dart';
-import 'package:team_space/features/chat/presentation/ui/widgets/chats_loading_list.dart';
-import 'package:team_space/features/chat/presentation/ui/widgets/chats_no_results.dart';
-import 'package:team_space/features/spaces/presentation/cubit/spaces_cubit.dart';
+import '../../../../../core/di/get_it.dart';
+import '../../../../../core/notifications/pending_chat_open.dart';
+import '../../../../spaces/presentation/cubit/spaces_cubit.dart';
+import '../../cubit/chats_cubit.dart';
+import '../../cubit/chats_state.dart';
+import '../screens/messages_screen.dart';
+import 'chats_error_view.dart';
+import 'chats_list_view.dart';
+import 'chats_loading_list.dart';
+import 'chats_no_results.dart';
 
 /// The chats list bound to the selected space — it reloads whenever the user
 /// switches to another space.
@@ -27,6 +30,32 @@ class _ChatsBodyState extends State<ChatsBody> {
     }
   }
 
+  /// يفتح الشات اللي جاي من ضغطة على إشعار — بعد ما القايمة تبقى محمّلة
+  Future<void> _openPendingChat(BuildContext context, ChatsLoaded state) async {
+    final chatId = getIt<PendingChatOpen>().take();
+    if (chatId == null) return;
+
+    for (final item in state.chats) {
+      if (item.chat.id != chatId) continue;
+
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => MessagesScreen(
+            chatId: item.chat.id,
+            displayName: item.displayName,
+            otherUserId: item.otherUserId,
+            chatType: item.chat.type,
+            isDefault: item.chat.isDefault,
+            avatarUrl: item.avatarUrl,
+          ),
+        ),
+      );
+      if (!context.mounted) return;
+      context.read<ChatsCubit>().refresh();
+      return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<SpacesCubit, SpacesState>(
@@ -39,12 +68,15 @@ class _ChatsBodyState extends State<ChatsBody> {
           context.read<ChatsCubit>().loadMyChats(state.selectedSpace.id);
         }
       },
-      child: BlocBuilder<ChatsCubit, ChatsState>(
+      child: BlocConsumer<ChatsCubit, ChatsState>(
+        listener: (context, state) {
+          if (state is ChatsLoaded) _openPendingChat(context, state);
+        },
         builder: (context, state) => switch (state) {
           ChatsLoaded(:final chats, :final query)
               when chats.isEmpty && query.isNotEmpty =>
             const ChatsNoResults(),
-          ChatsLoaded(:final chats) => ChatsListView(chats: chats  ),
+          ChatsLoaded(:final chats) => ChatsListView(chats: chats),
           ChatsError(:final message) => ChatsErrorView(message: message),
           ChatsInitial() || ChatsLoading() => const ChatsLoadingList(),
         },
