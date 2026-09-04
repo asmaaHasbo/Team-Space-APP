@@ -35,6 +35,7 @@ Future<void> main() async {
     getIt<LocalNotificationsService>().show(
       title: notification.title ?? '',
       body: notification.body ?? '',
+      payload: chatId,
     );
   });
   // (٢) التطبيق مصغّر والمستخدم دس على الاشعار

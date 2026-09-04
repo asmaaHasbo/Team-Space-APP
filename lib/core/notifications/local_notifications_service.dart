@@ -1,4 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:team_space/core/di/get_it.dart';
+import 'package:team_space/core/notifications/pending_chat_open.dart';
 
 class LocalNotificationsService {
   LocalNotificationsService(this._plugin);
@@ -7,13 +9,19 @@ class LocalNotificationsService {
 
   Future<void> init() async {
     //بيحدد أيقونة الاشعار — الصورة الصغيرة اللي بتظهر في الشريط فوق
-    const androidSettings =  AndroidInitializationSettings(
+    const androidSettings = AndroidInitializationSettings(
       '@drawable/ic_notification',
     );
 
     const settings = InitializationSettings(android: androidSettings);
     //بيسلّم العلبة للمكتبة. من غيره المكتبة متعرفش أي حاجة من دول.
-    await _plugin.initialize(settings: settings);
+    await _plugin.initialize(
+      settings: settings,
+      onDidReceiveNotificationResponse: (response) {
+        final chatId = response.payload;
+        if (chatId != null) getIt<PendingChatOpen>().set(chatId);
+      },
+    );
 
     const channel = AndroidNotificationChannel(
       'messages_channel', // اسم القناة اللي المستخدم مش هيشوفه
@@ -32,20 +40,21 @@ class LocalNotificationsService {
         ?.createNotificationChannel(channel);
   }
 
-  Future<void> show({required String title, required String body}) async {
+  Future<void> show({
+    required String title,
+    required String body,
+    String? payload,
+  }) async {
     await _plugin.show(
-      //بيحدد رقم الاشعار — لو فيه اشعارين بنفس الرقم الاشعار القديم هيتبدل بالجديد
       id: DateTime.now().millisecondsSinceEpoch.remainder(100000),
       title: title,
       body: body,
+      payload: payload,
       notificationDetails: const NotificationDetails(
-        //بيحدد شكل الاشعار على حسب النظام التشغيلي
         android: AndroidNotificationDetails(
           'messages_channel',
           'Messages',
-          //بيحدد مستوى الأهمية وال أولوية للإشعار
           importance: Importance.high,
-          //علشان يظهر على طول من غير ما المستخدم يفتح الشريط
           priority: Priority.high,
         ),
       ),

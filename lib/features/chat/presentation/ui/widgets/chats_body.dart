@@ -21,14 +21,29 @@ class ChatsBody extends StatefulWidget {
 }
 
 class _ChatsBodyState extends State<ChatsBody> {
-  @override
-  void initState() {
-    super.initState();
-    final spacesState = context.read<SpacesCubit>().state;
-    if (spacesState is SpacesLoaded) {
-      context.read<ChatsCubit>().loadMyChats(spacesState.selectedSpace.id);
-    }
+late final AppLifecycleListener _lifecycleListener;
+
+@override
+void initState() {
+  super.initState();
+  _lifecycleListener = AppLifecycleListener(onResume: _onResumed);
+
+  final spacesState = context.read<SpacesCubit>().state;
+  if (spacesState is SpacesLoaded) {
+    context.read<ChatsCubit>().loadMyChats(spacesState.selectedSpace.id);
   }
+}
+
+@override
+void dispose() {
+  _lifecycleListener.dispose();
+  super.dispose();
+}
+
+void _onResumed() {
+  final state = context.read<ChatsCubit>().state;
+  if (state is ChatsLoaded) _openPendingChat(context, state);
+}
 
   /// يفتح الشات اللي جاي من ضغطة على إشعار — بعد ما القايمة تبقى محمّلة
   Future<void> _openPendingChat(BuildContext context, ChatsLoaded state) async {
