@@ -1,6 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:team_space/core/di/get_it.dart';
 import 'package:team_space/core/notifications/pending_chat_open.dart';
+import 'package:team_space/core/themes/app_colors.dart';
 
 class LocalNotificationsService {
   LocalNotificationsService(this._plugin);
@@ -9,9 +10,7 @@ class LocalNotificationsService {
 
   Future<void> init() async {
     //بيحدد أيقونة الاشعار — الصورة الصغيرة اللي بتظهر في الشريط فوق
-    const androidSettings = AndroidInitializationSettings(
-      '@drawable/ic_notification',
-    );
+    const androidSettings = AndroidInitializationSettings('ic_notification');
 
     const settings = InitializationSettings(android: androidSettings);
     //بيسلّم العلبة للمكتبة. من غيره المكتبة متعرفش أي حاجة من دول.
@@ -56,6 +55,8 @@ class LocalNotificationsService {
           'Messages',
           importance: Importance.high,
           priority: Priority.high,
+
+          color: AppColors.primary,
         ),
       ),
     );

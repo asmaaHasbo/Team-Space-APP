@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#0C447C</color>
+    <!-- Tint Android applies to the notification small icon and app name. -->
+    <color name="notification_color">#0C447C</color>
 </resources>

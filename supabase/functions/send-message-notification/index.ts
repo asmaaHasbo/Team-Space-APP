@@ -63,6 +63,7 @@ Deno.serve(async (req) => {
                 notification: {
                   channel_id: "messages_channel",
                   icon: "ic_notification",
+                  color: "#0C447C",
                 },
               },
               data: {
