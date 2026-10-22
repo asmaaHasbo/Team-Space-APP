@@ -90,7 +90,7 @@ class MessagesScreen extends StatelessWidget {
           isDefault: isDefault,
           onTap: onTitleTap,
         ),
-        body: MessagesBody(isGroup: isGroup, spaceId: spaceId),
+        body: MessagesBody(isGroup: isGroup, spaceId: spaceId, chatId: chatId),
       ),
     );
   }

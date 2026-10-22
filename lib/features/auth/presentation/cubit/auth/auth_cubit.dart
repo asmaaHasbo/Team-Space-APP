@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_space/core/error/handle_errors.dart';
+import 'package:team_space/core/notifications/notifications_service.dart';
 import 'package:team_space/features/auth/domain/entities/app_user.dart';
 import 'package:team_space/features/auth/domain/usecases/get_current_user.dart';
 import 'package:team_space/features/auth/domain/usecases/logout.dart';
@@ -16,12 +17,16 @@ class AuthCubit extends Cubit<AuthState> {
 
   StreamSubscription<AppUser?>? _authSubscription;
 
+final NotificationsService _notifications; 
+
   AuthCubit({
     required GetCurrentUser getCurrentUser,
     required Logout logout,
     required WatchAuthState watchAuthState,
+    required NotificationsService notifications,
   }) : _getCurrentUser = getCurrentUser,
        _logout = logout,
+       _notifications = notifications,
        super(const AuthInitial()) {
     // الدخول مش دايماً بيبدأ من جوه التطبيق — لينك تأكيد الإيميل بيفتح
     // جلسة من بره، فبنسمع التغيير بدل ما نستنى زرار يتداس.
@@ -32,6 +37,8 @@ class AuthCubit extends Cubit<AuthState> {
       onError: (_) {},
     );
   }
+
+
 
   /// بتتنادى أول ما التطبيق يفتح (من الـ AuthGate)
   Future<void> checkAuthStatus() async {
@@ -47,8 +54,10 @@ class AuthCubit extends Cubit<AuthState> {
 
   /// بيتنادى من الـ UI بعد ما الـ LoginCubit ينجح
   void onAuthenticated(AppUser user) => emit(Authenticated(user));
+ Future<void> logout() async {
+    // لازم قبل signOut: بعده auth.uid() بتبقى null والـ RLS بترفض المسح.
+    await _notifications.deleteToken();                                       // 👈 جديد
 
-  Future<void> logout() async {
     try {
       await _logout();
     } on AppException {
@@ -56,10 +65,25 @@ class AuthCubit extends Cubit<AuthState> {
     }
     emit(const Unauthenticated());
   }
-
   @override
   Future<void> close() {
     _authSubscription?.cancel();
     return super.close();
   }
+
+  /// عنوان التوصيل بيتحفظ في لحظة الدخول نفسها، مش في كل مكان بيسجّل دخول —
+  /// التلات مصادر (الزرار، فتح التطبيق، ولينك الإيميل) بيعدّوا من هنا.
+  @override
+  void onChange(Change<AuthState> change) {
+    super.onChange(change);
+
+    final wasIn = change.currentState is Authenticated;
+    final isIn = change.nextState is Authenticated;
+
+    if (!wasIn && isIn) {
+      _notifications.saveToken();
+    }
+  }
+
+
 }
